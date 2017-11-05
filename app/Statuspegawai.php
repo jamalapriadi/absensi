@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Statuspegawai extends Model
 {
-    protected $table="status_pegawai";
+    protected $table="jabatan_pegawai";
 
     public function pangkat(){
         return $this->belongsTo('\App\Pangkat');

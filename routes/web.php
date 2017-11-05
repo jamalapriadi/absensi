@@ -29,6 +29,7 @@ Route::group(['prefix'=>'home'],function(){
 	Route::put('tugas-jabatan/{id}','JabatanController@add_tugas');
 
 	Route::group(['prefix'=>'data'],function(){
+		Route::post('save-session-sasaran','HomeController@save_session_sasaran');
 		Route::resource('status','StatusController');
 		Route::resource('golongan','GolonganController');
 		Route::get('list-golongan','GolonganController@list_golongan');

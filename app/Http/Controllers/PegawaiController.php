@@ -63,10 +63,12 @@ class PegawaiController extends Controller
     {
         $status=\App\Status::select('id','nama_status')->get();
         $pangkat=\App\Pangkat::select('id','nama_pangkat','ruang')->get();
+        $jabatan=\App\Jabatan::select('id','nama_jabatan')->get();
 
         return view('dashboard.pegawai.create')
             ->with('status',$status)
-            ->with('pangkat',$pangkat);
+            ->with('pangkat',$pangkat)
+            ->with('jabatan',$jabatan);
     }
 
     /**
@@ -116,6 +118,7 @@ class PegawaiController extends Controller
                 $status->pegawai_id=$idpegawai;
                 $status->status_id=$request->input('status');
                 $status->pangkat_id=$request->input('pangkat');
+                $status->jabatan_id=$request->input('jabatan');
                 $status->tgl_masuk=date('Y-m-d',strtotime($request->input('tanggalmasuk')));
                 $status->digaji_menurut=$request->input('gajimenurut');
                 $status->gaji_pokok=$request->input('gaji');

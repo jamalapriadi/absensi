@@ -205,6 +205,7 @@ class JabatanController extends Controller
         }else{
             $tugas=new \App\Tugasjabatan;
             $tugas->jabatan_id=$id;
+            $tugas->sasaran_kerja_id=$request->session()->get('sasarankerja');
             $tugas->nama_tugas=$request->input('tugas');
             $tugas->save();
 

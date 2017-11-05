@@ -89,6 +89,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Jabatan</label>
+                    <div class="col-lg-8">
+                        <select name="jabatan" id="jabatan" class="form-control">
+                            <option value="">--Pilih Jabatan--</option>
+                            @foreach($jabatan as $row)
+                                <option value="{{$row->id}}">{{$row->nama_jabatan}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="" class="col-lg-2 control-label">Tanggal Masuk</label>
                     <div class="col-lg-8">
                         <input type="text" class="form-control daterange-single" name="tanggalmasuk">

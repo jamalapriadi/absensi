@@ -100,16 +100,31 @@
 
     <!-- Page container -->
 	<div class="page-container">
-
 		<!-- Page content -->
 		<div class="page-content">
-            <div class="col-sm-9 kunjungan">
-                <div class="kunjungan-id">Kunjungan 1</div>
-                <div>Start :</div>
-                <div>Sabtu, 01 Oktober 2016</div>
-                <div>End :</div>
-                <div>Kamis, 20 Oktober 2016</div>
-                <div><a class="white" href="http://[::1]/bjb/home/session/4">Go &#9654;</a></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div id="pesan"></div>
+
+                        @foreach($sasaran as $row)
+                        <div class="page-header content-group" style="border: 1px solid #ddd;margin-top:10px;">
+                            <div class="page-header-content">
+                                <div class="page-title">
+                                    <h5>
+                                        <i class="icon-arrow-left52 position-left"></i>
+                                        <span class="text-semibold">{{$row->nama_sasaran}}</span> # Start Periode : {{$row->start_periode}} - End Periode : {{$row->end_periode}}
+                                    </h5>
+                                </div>
+
+                                <div class="heading-elements">
+                                    <a href="#" kode="{{$row->id}}" class="btn bg-teal-400 btn-icon btn-sm heading-btn sasaran">Go <i class="icon-play4"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +152,30 @@
                     $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
                 }
             });
+
+            $(document).on("click",".sasaran",function(){
+                var idsasaran=$(this).attr("kode");
+
+                $.ajax({
+                    url:"{{URL::to('home/data/save-session-sasaran')}}",
+                    type:"POST",
+                    data:"sasaran="+idsasaran,
+                    beforeSend:function(){
+                        $('#pesan').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
+                    },
+                    success:function(data){
+                        if(data.success==true){
+                            $('#pesan').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
+                            location.reload();
+                        }else{
+                            $('#pesan').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
+                        }
+                    },
+                    error:function(){
+                        $('#pesan').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
+                    }
+                })
+            })
 		})
 	</script>
 
