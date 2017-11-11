@@ -4,7 +4,27 @@
     <form class="form-horizontal" name="formPegawai" id="formPegawai" onsubmit="return false;" enctype="multipart/form-data">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h6 class="panel-title">Add New Pegawai</h6>
+                <h6 class="panel-title">User Account</h6>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Email</label>
+                    <div class="col-lg-8">
+                        <input type="email" class="form-control" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Passoword</label>
+                    <div class="col-lg-8">
+                        <input type="password" class="form-control" name="passoword" placeholder="Passoword">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="panel-title">Profile Pegawai</h6>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -34,7 +54,7 @@
                 <div class="form-group">
                     <label for="" class="col-lg-2 control-label">Tanggal Lahir</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control daterange-single" name="tanggal" placeholder="Tanggal Lahir">
+                        <input type="text" class="form-control pickadate-year" name="tanggal" placeholder="Tanggal Lahir">
                     </div>
                 </div>
                 <div class="form-group">
@@ -63,7 +83,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h6 class="panel-title">Status Pegawai</h6>
+                <h6 class="panel-title">Pangkat</h6>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -77,6 +97,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="" class="col-lg-2 control-label">Pangkat</label>
                     <div class="col-lg-8">
@@ -88,6 +109,21 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">TMT</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control pickadate-year" name="tmtpangkat">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="panel-title">Jabatan</h6>
+            </div>
+            <div class="panel-body">
                 <div class="form-group">
                     <label for="" class="col-lg-2 control-label">Jabatan</label>
                     <div class="col-lg-8">
@@ -99,22 +135,11 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="" class="col-lg-2 control-label">Tanggal Masuk</label>
+                    <label for="" class="col-lg-2 control-label">TMT</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control daterange-single" name="tanggalmasuk">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="col-lg-2 control-label">Gaji Pokok</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="gaji" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="col-lg-2 control-label">Digaji Menurut</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="gajimenurut" class="form-control">
+                        <input type="text" name="tmtjabatan" class="form-control pickadate-year">
                     </div>
                 </div>
             </div>
@@ -128,6 +153,8 @@
                     <i class="icon-floppy-disk"></i>
                     Simpan
                 </button>
+
+                <a href="{{URL::to('home/pegawai')}}" class="btn btn-default">Kembali</a>
             </div>
         </div>
     </form>
@@ -143,9 +170,11 @@
     {{Html::script('limitless1/assets/js/plugins/pickers/pickadate/legacy.js')}}
     <script>
         $(function(){
-            $('.daterange-single').daterangepicker({ 
-                singleDatePicker: true,
-                dateFormat: 'dd/mm/yyyy'
+
+            $('.pickadate-year').pickadate({
+                selectYears: true,
+                selectMonths: true,
+                selectYears: 4
             });
 
             // $(document).on("change","#filepackage",function(objEvent){

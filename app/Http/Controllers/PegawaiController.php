@@ -19,20 +19,60 @@ class PegawaiController extends Controller
             \DB::statement(\DB::raw('set @rownum=0'));
             $pegawai=Pegawai::with(
                 [
-                    'status'=>function($q){
+                    'pangkat'=>function($q){
                         $q->where('active','Y');
                     },
-                    'status.pangkat',
-                    'status.kepegawaian'
+                    'jabatan'=>function($q){
+                        $q->where('active','Y');
+                    }
                 ]
             )
-                ->select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','nip','tmk','nama_lengkap',
+            ->select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','nip','tmk','nama_lengkap',
                 'tempat_lahir','tanggal_lahir','agama','alamat','active','foto');
+            
+            if($request->has('status')){
+                $pegawai=$pegawai->where('status_id',$request->input('status'));
+            }
+
+            if($request->has('pangkat')){
+                $pangkat=$request->input('pangkat');
+
+                $pegawai=$pegawai->whereHas('pangkat',function($q) use($pangkat){
+                    $q->where('pangkat_id',$pangkat);
+                });
+            }
+
+            if($request->has('jabatan')){
+                $jabatan=$request->input('jabatan');
+
+                $pegawai=$pegawai->whereHas('jabatan',function($q) use($jabatan){
+                    $q->where('jabatan_id',$jabatan);
+                });
+            }
 
             return $dataTables->eloquent($pegawai)   
+                ->addColumn('pangkats',function($q){
+                    $html="";
+                    foreach($q->pangkat as $row){
+                        $html.=$row->nama_pangkat;
+                    }
+
+                    return $html;
+                })
+                ->addColumn('jabatans',function($q){
+                    $html="";
+                    foreach($q->jabatan as $row){
+                        $html.=$row->nama_jabatan;
+                    }
+
+                    return $html;
+                })
                 ->addColumn('action',function($row){
                     $html="<div class='btn group'>";
-                        $html.="<a href='".\URL::to('home/pegawai/'.$row->id)."' class='btn btn-info btn-sm' title='Histroy'><i class='icon-history'></i></a>";
+                        $html.="<a href='".\URL::to('home/tugas-pegawai/'.$row->id)."' class='btn btn-info btn-sm' title='Tugas Jabatan' kode='".$row->id."'>
+                            <i class='fa fa-history'></i>
+                            </a>";
+                            
                         $html.="<a href='".\URL::to('home/pegawai/'.$row->id.'/edit')."' class='btn btn-warning btn-sm' title='Edit' kode='".$row->id."'>
                             <i class='fa fa-edit'></i>
                             </a>";
@@ -48,10 +88,19 @@ class PegawaiController extends Controller
                     return $html;
                 })
                 ->rawColumns(['action','gambar'])
-                ->make(true);   
-        }
+                ->make(true);     
+        } 
 
-        return view('dashboard.pegawai.index');
+        $status=\App\Status::select('id','nama_status')->get();
+        $pangkat=\App\Pangkat::select('id','nama_pangkat','ruang')->get();
+        $jabatan=\App\Jabatan::select('id','nama_jabatan')->get();
+
+        return view('dashboard.pegawai.index')
+            ->with('status',$status)
+            ->with('pangkat',$pangkat)
+            ->with('jabatan',$jabatan)
+            ->with('home','Dashboard')
+            ->with('title','Pegawai');
     }
 
     /**
@@ -68,7 +117,9 @@ class PegawaiController extends Controller
         return view('dashboard.pegawai.create')
             ->with('status',$status)
             ->with('pangkat',$pangkat)
-            ->with('jabatan',$jabatan);
+            ->with('jabatan',$jabatan)
+            ->with('home','Dashboard')
+            ->with('title','Add New Pegawai');
     }
 
     /**
@@ -96,6 +147,7 @@ class PegawaiController extends Controller
             $pegawai->tempat_lahir=$request->input('tempat');
             $pegawai->agama=$request->input('agama');
             $pegawai->alamat=$request->input('alamat');
+            $pegawai->status_id=$request->input('status');
             $pegawai->active='Y';
 
             if($request->hasFile('file')){
@@ -113,17 +165,39 @@ class PegawaiController extends Controller
             $simpan=$pegawai->save();
 
             if($simpan){
-                $idpegawai=$pegawai->id;
-                $status=new \App\Statuspegawai;
-                $status->pegawai_id=$idpegawai;
-                $status->status_id=$request->input('status');
-                $status->pangkat_id=$request->input('pangkat');
-                $status->jabatan_id=$request->input('jabatan');
-                $status->tgl_masuk=date('Y-m-d',strtotime($request->input('tanggalmasuk')));
-                $status->digaji_menurut=$request->input('gajimenurut');
-                $status->gaji_pokok=$request->input('gaji');
-                $status->active='Y';
-                $status->save();
+                $user=new \App\User;
+                $user->name=$request->input('nama');
+                $user->email=$request->input('email');
+                $user->password=bcrypt($request->input('password'));
+                $simpanuser=$user->save();
+
+                if($simpanuser){
+                    \DB::table('user_pegawai')
+                        ->insert(
+                            [
+                                'user_id'=>$user->id,
+                                'pegawai_id'=>$pegawai->id
+                            ]
+                        );
+                }
+
+                if($request->has('pangkat')){
+                    $pangkat=new \App\Pangkatpegawai;
+                    $pangkat->pegawai_id=$pegawai->id;
+                    $pangkat->pangkat_id=$request->input('pangkat');
+                    $pangkat->tmt=date('Y-m-d',strtotime($request->input('tmtpangkat')));
+                    $pangkat->active='Y';
+                    $pangkat->save();
+                }
+
+                if($request->has('jabatan')){
+                    $jabatan=new \App\Jabatanpegawai;
+                    $jabatan->pegawai_id=$pegawai->id;
+                    $jabatan->jabatan_id=$request->input('jabatan');
+                    $jabatan->tmt=date('Y-m-d',strtotime($request->input('tmtjabatan')));
+                    $jabatan->active='Y';
+                    $jabatan->save();
+                }
 
                 $data=array(
                     'success'=>true,
@@ -172,10 +246,27 @@ class PegawaiController extends Controller
      */
     public function edit($id)
     {
-        $pegawai=Pegawai::find($id);
+        $pegawai=Pegawai::with(
+                [
+                    'pangkat'=>function($q){
+                        $q->where('active','Y');
+                    },
+                    'jabatan'=>function($q){
+                        $q->where('active','Y');
+                    }
+                ]
+            )->find($id);
+        $status=\App\Status::select('id','nama_status')->get();
+        $pangkat=\App\Pangkat::select('id','nama_pangkat','ruang')->get();
+        $jabatan=\App\Jabatan::select('id','nama_jabatan')->get();
 
         return view('dashboard.pegawai.edit')
-            ->with('pegawai',$pegawai);
+            ->with('pegawai',$pegawai)
+            ->with('status',$status)
+            ->with('pangkat',$pangkat)
+            ->with('jabatan',$jabatan)
+            ->with('home','Edit Pegawai')
+            ->with('title',$pegawai->nama_lengkap);
     }
 
     /**
@@ -204,6 +295,7 @@ class PegawaiController extends Controller
             $pegawai->tempat_lahir=$request->input('tempat');
             $pegawai->agama=$request->input('agama');
             $pegawai->alamat=$request->input('alamat');
+            $pegawai->status_id=$request->input('status');
             $pegawai->active='Y';
 
             if($request->hasFile('file')){
@@ -221,6 +313,28 @@ class PegawaiController extends Controller
             $simpan=$pegawai->save();
 
             if($simpan){
+                if($request->has('pangkat')){
+                    $pangkat=\App\Pangkatpegawai::where('pegawai_id',$id)
+                        ->where('active','Y')
+                        ->update(
+                            [
+                                'pangkat_id'=>$request->input('pangkat'),
+                                'tmt'=>date('Y-m-d',strtotime($request->input('tmtpangkat')))
+                            ]
+                        );
+                }
+
+                if($request->has('jabatan')){
+                    $jabatan=\App\Jabatanpegawai::where('pegawai_id',$id)
+                        ->where('active','Y')
+                        ->update(
+                            [
+                                'jabatan_id'=>$request->input('jabatan'),
+                                'tmt'=>date('Y-m-d',strtotime($request->input('tmtjabatan')))
+                            ]
+                        );
+                }
+
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data Berhasil disimpan',
@@ -246,9 +360,16 @@ class PegawaiController extends Controller
      */
     public function destroy($id)
     {
-        $pegawai=Pegawai::find($id);
+        $pegawai=Pegawai::with('user')->find($id);
         
         if($pegawai->delete()){
+            \DB::table('user_pegawai')
+                ->where(
+                    [
+                        'pegawai_id'=>$pegawai->id
+                    ]
+                )->delete();
+
             $data=array(
                 'success'=>true,
                 'pesan'=>'Data berhasil dihapus',
@@ -263,5 +384,32 @@ class PegawaiController extends Controller
         }
 
         return $data;
+    }
+
+    public function list_pegawai(Request $request){
+        $pegawai=Pegawai::select('id','nama_lengkap as text')
+            ->where('active',1);
+
+        
+        if($request->has('q')){
+            $pegawai=$pegawai->where('nama_lengkap','like','%'.$request->input('q').'%');
+        }
+
+        if($request->has('page_limit')){
+            $pegawai=$pegawai->paginate($request->input('page_limit'));
+        }else{
+            $pegawai=$pegawai->paginate(50);
+        }
+
+        return $pegawai;
+    }
+
+    public function tugas($id){
+        $pegawai=Pegawai::find($id);
+
+        return view('dashboard.pegawai.detail')
+            ->with('pegawai',$pegawai)
+            ->with('home','Dashboard')
+            ->with('title','Tugas Pegawai');
     }
 }

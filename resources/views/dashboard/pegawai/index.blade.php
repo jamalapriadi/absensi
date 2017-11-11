@@ -9,24 +9,35 @@
                     <i class="icon-add"></i>
                     Add New
                 </a>
+
+                {{--  <a class="btn btn-success" href="#">
+                    <i class="icon-add"></i>
+                    Import Pegawai
+                </a>  --}}
             </div>
         </div>
         <div class="panel-body">
-            <div class="row">
+            {{--  <div class="row">
                 <div class="col-lg-3">
                     <div class="form-group">
                         <label class="control-label">Status</label>
-                        <select class="form-control">
-                            <option></option>
+                        <select class="form-control" name="status" id="status">
+                            <option value="">--Pilih Status--</option>
+                            @foreach($status as $row)
+                                <option value="{{$row->id}}">{{$row->nama_status}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
 
                 <div class="col-lg-3">
                     <div class="form-group">
-                        <label class="control-label">Golongan</label>
-                        <select class="form-control">
-                            <option></option>
+                        <label class="control-label">Jabatan</label>
+                        <select class="form-control" name="jabatan" id="jabatan">
+                            <option value="">--Pilih Jabatan--</option>
+                            @foreach($jabatan as $row)
+                                <option value="{{$row->id}}">{{$row->nama_jabatan}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -34,20 +45,24 @@
                 <div class="col-lg-3">
                     <div class="form-group">
                         <label class="control-label">Pangkat</label>
-                        <select class="form-control">
-                            <option></option>
+                        <select class="form-control" name="pangkat" id="pangkat">
+                            <option value="">--Pilih Pangkat--</option>
+                            @foreach($pangkat as $row)
+                                <option value="{{$row->id}}">{{$row->nama_pangkat}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
+            </div>  --}}
             <table class="table table-striped datatable-colvis-basic-pegawai"></table>
         </div>
     </div>
+
+    {{--  <div class="panel panel-default">
+        <div class="panel-body">
+            
+        </div>
+    </div>  --}}
 
     <div id="divModal"></div>
 @stop
@@ -93,8 +108,8 @@
                         {data: 'nip', name: 'nip',title:'NIP',defaultContent: "-"},
                         {data: 'tmk', name: 'tmk',title:'TMK',defaultContent: "-"},
                         {data: 'nama_lengkap', name: 'nama_lengkap',title:'Nama Lengkap',defaultContent: "-"},
-                        {data: 'status.kepegawaian.nama_status', name: 'status.kepegawaian.nama_status',title:'Status Pegawai',defaultContent: "-"},
-                        {data: 'status.pangkat.nama_pangkat', name: 'status.pangkat.nama_pangkat',title:'Pangkat',defaultContent: "-"},
+                        {data: 'pangkats', name: 'pangkats',title:'Pangkat',defaultContent: "-"},
+                        {data: 'jabatans', name: 'jabatans',title:'Jabatan',defaultContent: "-"},
                         //{data: 'tempat_lahir', name: 'tempat_lahir',title:'Tempat Lahir'},
                         //{data: 'tanggal_lahir', name: 'tanggal_lahir',title:'Tanggal Lahir'},
                         //{data: 'agama', name: 'agama',title:'Agama'},
@@ -130,6 +145,60 @@
                 }); 
             } 
 
+            function changePegawai(){
+                var jabatan=$("#jabatan option:selected").val();
+                var pangkat=$("#pangkat option:selected").val();
+                var status=$("#status option:selected").val();
+
+                $('.datatable-colvis-basic-pegawai').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    autoWidth: true,
+                    destroy: true,
+                    ajax: "{{URL::to('home/pegawai')}}?jabatan="+jabatan+"&pangkat="+pangkat+"&status="+status,
+                    columns: [
+                        {data: 'no', name: 'no',title:'No.',searchable:false,width:'5%'},
+                        {data: 'gambar', name: 'gambar',title:'',searchable:false},
+                        {data: 'nip', name: 'nip',title:'NIP',defaultContent: "-"},
+                        {data: 'tmk', name: 'tmk',title:'TMK',defaultContent: "-"},
+                        {data: 'nama_lengkap', name: 'nama_lengkap',title:'Nama Lengkap',defaultContent: "-"},
+                        {data: 'pangkats', name: 'pangkats',title:'Pangkat',defaultContent: "-"},
+                        {data: 'jabatans', name: 'jabatans',title:'Jabatan',defaultContent: "-"},
+                        //{data: 'tempat_lahir', name: 'tempat_lahir',title:'Tempat Lahir'},
+                        //{data: 'tanggal_lahir', name: 'tanggal_lahir',title:'Tanggal Lahir'},
+                        //{data: 'agama', name: 'agama',title:'Agama'},
+                        //{data: 'alamat', name: 'alamat',title:'Alamat'},
+                        {data: 'action', name: 'action',title:'',searchable:false,width:'17%'}
+                    ],
+                    buttons: [
+                        'copy', 'excel', 'pdf'
+                    ],
+                    colVis: {
+                        buttonText: "<i class='icon-three-bars'></i> <span class='caret'></span>",
+                        align: "right",
+                        overlayFade: 200,
+                        showAll: "Show all",
+                        showNone: "Hide all"
+                    },
+                    bDestroy: true
+                }); 
+
+                // Launch Uniform styling for checkboxes
+                $('.ColVis_Button').addClass('btn btn-primary btn-icon').on('click mouseover', function() {
+                    $('.ColVis_collection input').uniform();
+                });
+
+
+                // Add placeholder to the datatable filter option
+                $('.dataTables_filter input[type=search]').attr('placeholder', 'Type to filter...');
+
+
+                // Enable Select2 select for the length option
+                $('.dataTables_length select').select2({
+                    minimumResultsForSearch: "-1"
+                }); 
+            }
+
             $(document).on("click","a.hapuspegawai",function(){
                 idpegawai=$(this).attr("kode");
 
@@ -162,6 +231,18 @@
                         swal("Cancelled", "Your data is safe :)", "error");
                     }
                 });
+            })
+
+            $(document).on("change","#status",function(){
+                changePegawai();
+            })
+
+            $(document).on("change","#jabatan",function(){
+                changePegawai();
+            })
+
+            $(document).on("change","#pangkat",function(){
+                changePegawai();
             })
 
             showPegawai();

@@ -25,7 +25,9 @@ class HomeController extends Controller
     {
         if ($request->session()->has('sasarankerja')) {
             $value = $request->session()->get('sasarankerja');
-            return view('home');
+            return view('home')
+                ->with('home','Dashboard')
+                ->with('title','Home');
         }else{
             $sasaran=\App\Sasarankerja::all();
             return view('sasaran')
@@ -34,15 +36,21 @@ class HomeController extends Controller
     }
 
     public function setting(){
-        return view('setting');
+        return view('setting')
+            ->with('home','Dashboard')
+            ->with('title','Setting');
     }
 
     public function users(){
-        return view('user.index');
+        return view('user.index')
+            ->with('home','Dashboard')
+            ->with('title','User');
     }
 
     public function master(){
-        return view('dashboard.master');
+        return view('dashboard.master')
+            ->with('home','Dashboard')
+            ->with('title','Master Data');
     }
 
     public function save_session_sasaran(Request $request){

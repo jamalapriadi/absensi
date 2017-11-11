@@ -85,7 +85,7 @@
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">
                         <img src="#" alt="Profile">
-						<span>{{Auth::user()->USER_NAME}}</span>
+						<span>{{Auth::user()->name}}</span>
 						<i class="caret"></i>
 					</a>
 
@@ -129,7 +129,7 @@
                                     <img src="#" class='img-circle img-sm'>
                                 </a>
 								<div class="media-body">
-									<span class="media-heading text-semibold">{{\Auth::user()->username}}</span>
+									<span class="media-heading text-semibold">{{\Auth::user()->name}}</span>
 									<div class="text-size-mini text-muted">
 										<i class="icon-pin text-size-small"></i> &nbsp;
 									</div>
@@ -175,6 +175,7 @@
 										<ul>
 											<li><a href="{{URL::to('home/perilaku-kerja')}}">Perilaku Kerja</a></li>
 											<li><a href="{{URL::to('home/sasaran-kerja')}}">Sasaran Kerja</a></li>
+											<li><a href="{{URL::to('home/nilai-skp')}}">Nilai SKP</a></li>
 										</ul>
 									</li>
                                 </ul>
@@ -197,14 +198,14 @@
 				<div class="page-header">
 					<div class="page-header-content">
 						<div class="page-title">
-							<h4><span class="text-semibold">Dashboard</h4>
+							<h4><span class="text-semibold">{{$home}}</h4>
 						</div>
 					</div>
 
 					<div class="breadcrumb-line">
 						<ul class="breadcrumb">
-							<li><a href="{{URL::to('sam/package')}}"><i class="icon-price-tag2 position-left"></i> Home</a></li>
-							<li class="active">Title</li>
+							<li><a href="{{URL::to('sam/package')}}"><i class="icon-price-tag2 position-left"></i> {{$home}}</a></li>
+							<li class="active">{{$title}}</li>
 						</ul>
 						
 						<!--

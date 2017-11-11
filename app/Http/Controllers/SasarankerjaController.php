@@ -36,7 +36,9 @@ class SasarankerjaController extends Controller
                 ->make(true);
         }
 
-        return view('dashboard.sasarankerja');
+        return view('dashboard.sasarankerja')
+            ->with('home','Dashboard')
+            ->with('title','Sasaran Kerja');
     }
 
     /**

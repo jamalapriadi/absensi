@@ -15,4 +15,8 @@ class Statuspegawai extends Model
     public function kepegawaian(){
         return $this->belongsTo('\App\Status','status_id');
     }
+
+    public function jabatan(){
+        return $this->hasOne('\App\Jabatan','id','jabatan_id');
+    }
 }
