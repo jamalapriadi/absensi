@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Perilakukerja;
 use Illuminate\Http\Request;
+use \App\User;
 use Yajra\DataTables\DataTables;
-
-class PerilakukerjaController extends Controller
+use DB;
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,27 +18,33 @@ class PerilakukerjaController extends Controller
         if($request->ajax()){
             \DB::statement(\DB::raw('set @rownum=0'));
 
-            $perilaku=Perilakukerja::select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','nama_perilaku','deskripsi');
+            $user=User::select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','name','email','level','foto');
             
-            return $dataTables->eloquent($perilaku)   
+            return $dataTables->eloquent($user)   
                 ->addColumn('action',function($row){
+                    $disabled="";
+                    if(\Auth::user()->level=="admin"){
+                        $disabled="";
+                    }else{
+                        $disabled="disabled";
+                    }
                     $html="<div class='btn group'>";
-                        $html.="<a href='#' class='btn btn-warning btn-sm editperilaku' title='Edit' kode='".$row->id."'>
+                        $html.="<a href='#' ".$disabled." class='btn btn-warning btn-sm edituser' title='Edit' kode='".$row->id."'>
                             <i class='fa fa-edit'></i>
                             </a>";
-                        $html.="<a href='#' class='btn btn-danger btn-sm hapusperilaku' title='Hapus' kode='".$row->id."'>
+                        $html.="<a href='#' ".$disabled." class='btn btn-danger btn-sm hapususer' title='Hapus' kode='".$row->id."'>
                             <i class='fa fa-trash'></i>
                             </a>";
                     $html.="</div>";
                     return $html;
                 })
                 ->rawColumns(['action'])
-                ->make(true);	
+                ->make(true);
         }
 
-        return view('dashboard.perilaku')
+        return view('dashboard.user.index')
             ->with('home','Dashboard')
-            ->with('title','Perilaku Kerja');
+            ->with('title','Users');
     }
 
     /**
@@ -59,7 +65,14 @@ class PerilakukerjaController extends Controller
      */
     public function store(Request $request)
     {
-        $validasi=\Validator::make($request->all(),Perilakukerja::$rules,Perilakukerja::$pesan);
+        $rules=[
+            'nama'=>'required',
+            'email'=>'required|unique:users,email',
+            'password'=>'required',
+            'level'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
 
         if($validasi->fails()){
             $data=array(
@@ -68,10 +81,25 @@ class PerilakukerjaController extends Controller
                 'error'=>$validasi->errors()->all()
             );
         }else{
-            $perilaku=new Perilakukerja;
-            $perilaku->nama_perilaku=$request->input('nama');
-            $perilaku->deskripsi=$request->input('desc');
-            $perilaku->save();
+            $user=new User;
+            $user->email=$request->input('email');
+            $user->name=$request->input('nama');
+            $user->password=bcrypt($request->input('password'));
+            $user->level=$request->input('level');
+
+            if($request->hasFile('file')){
+                if (!is_dir('uploads/pegawai/')) {
+                    mkdir('uploads/pegawai/', 0777, TRUE);
+                }
+
+                $file=$request->file('file');
+                $filename=str_random(5).'-'.$file->getClientOriginalName();
+                $destinationPath='uploads/pegawai/';
+                $file->move($destinationPath,$filename);
+                $user->foto=$filename;
+            }
+
+            $user->save();
 
             $data=array(
                 'success'=>true,
@@ -86,38 +114,44 @@ class PerilakukerjaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Perilakukerja  $perilakukerja
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $perilaku=Perilakukerja::find($id);
-
-        return $perilaku;
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Perilakukerja  $perilakukerja
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Perilakukerja $perilakukerja)
+    public function edit($id)
     {
-        //
+        $user=User::find($id);
+
+        return $user;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Perilakukerja  $perilakukerja
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $validasi=\Validator::make($request->all(),Perilakukerja::$rules,Perilakukerja::$pesan);
-        
+        $rules=[
+            'nama'=>'required',
+            'email'=>'required',
+            'level'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
         if($validasi->fails()){
             $data=array(
                 'success'=>false,
@@ -125,10 +159,24 @@ class PerilakukerjaController extends Controller
                 'error'=>$validasi->errors()->all()
             );
         }else{
-            $perilaku=Perilakukerja::find($id);
-            $perilaku->nama_perilaku=$request->input('nama');
-            $perilaku->deskripsi=$request->input('desc');
-            $perilaku->save();
+            $user=User::find($id);
+            $user->email=$request->input('email');
+            $user->name=$request->input('nama');
+            $user->level=$request->input('level');
+
+            if($request->hasFile('file')){
+                if (!is_dir('uploads/pegawai/')) {
+                    mkdir('uploads/pegawai/', 0777, TRUE);
+                }
+
+                $file=$request->file('file');
+                $filename=str_random(5).'-'.$file->getClientOriginalName();
+                $destinationPath='uploads/pegawai/';
+                $file->move($destinationPath,$filename);
+                $user->foto=$filename;
+            }
+
+            $user->save();
 
             $data=array(
                 'success'=>true,
@@ -143,14 +191,14 @@ class PerilakukerjaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Perilakukerja  $perilakukerja
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $perilaku=Perilakukerja::find($id);
-        
-        if($perilaku->delete()){
+        $user=User::find($id);
+
+        if($user->delete()){
             $data=array(
                 'success'=>true,
                 'pesan'=>'Data berhasil dihapus',

@@ -66,7 +66,7 @@
                     <li class="active" id="tabDataSkp"><a href="#right-tab1" data-toggle="tab">Form SKP</a></li>
                     <li id="tabFormSkp"><a href="#right-tab2" data-toggle="tab">Pengukuran</a></li>
                     <li id="tabPengukuran"><a href="#right-tab3" data-toggle="tab">Perilaku Kerja</a></li>
-                    <li id="tabPerilaku"><a href="#right-tab4" data-toggle="tab">Penilaian</a></li>
+                    {{--  <li id="tabPerilaku"><a href="#right-tab4" data-toggle="tab">Penilaian</a></li>  --}}
                 </ul>
 
                 <div class="tab-content">
@@ -79,17 +79,11 @@
                     </div>
 
                     <div class="tab-pane" id="right-tab3">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Tanggal</th>
-                                    <th>Perilaku Kerja</th>
-                                    <th>Nilai</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <a class="btn btn-primary" id="addPerilaku">
+                            <i class="icon-add"></i> Add Perilaku Kerja
+                        </a>
+                        <br><br>
+                        <div id="divPerilakuKerja"></div>
                     </div>
 
                     <div class="tab-pane" id="right-tab4">
@@ -107,8 +101,32 @@
     <script>
         $(function(){
             var jabatan="{{$nilai->pegawai->id}}";
+            var skp_id="{{$nilai->id}}";
             var idtugas="";
             var idtarget="";
+            
+            // Setting datatable defaults
+            $.extend( $.fn.dataTable.defaults, {
+                autoWidth: false,
+                columnDefs: [{ 
+                    orderable: false,
+                    width: '100px',
+                    targets: [ 2 ]
+                }],
+                dom: '<"datatable-header"fCl><"datatable-scroll"t><"datatable-footer"ip>',
+                language: {
+                    search: '<span>Filter:</span> _INPUT_',
+                    lengthMenu: '<span>Show:</span> _MENU_',
+                    paginate: { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+                drawCallback: function () {
+                    $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
+                    $.uniform.update();
+                },
+                preDrawCallback: function() {
+                    $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').removeClass('dropup');
+                }
+            });
 
             function showFormSkp(){
                 $.ajax({
@@ -260,6 +278,64 @@
                 })
             }
 
+            function showPerilakuKerja(){
+                $.ajax({
+                    url:"{{URL::to('home/data/perilaku-kerja-by-id-skp')}}/"+skp_id,
+                    type:"GET",
+                    beforeSend:function(){
+                        $("#divPerilakuKerja").empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
+                    },
+                    success:function(result){
+                        var el="";
+                        el+='<table class="table table-bordered" id="prestasi">'+
+                            '<thead>'+
+                                '<tr>'+
+                                    '<th>No.</th>'+
+                                    '<th>Perilaku Kerja</th>'+
+                                    '<th>Nilai</th>'+
+                                    '<th></th>'+
+                                '</tr>'+
+                            '</thead>';
+                            if(result.prestasi.length>0){
+                                var no=0;
+                                $.each(result.prestasi,function(a,b){
+                                    no++;
+                                    el+="<tr>"+
+                                        "<td style='width:5%'>"+no+"</td>"+
+                                        "<td>"+b.nama_perilaku+"</td>"+
+                                        "<td>"+b.pivot.nilai+"</td>"+
+                                        "<td style='width:15%'>"+
+                                            "<div class='btn-group'>"+
+                                                "<a class='btn btn-sm btn-warning editperilaku' kode='"+b.pivot.id+"' idper='"+b.pivot.perilaku_kerja_id+"' namaper='"+b.nama_perilaku+"' nilai='"+b.pivot.nilai+"'><i class='icon-pencil4'></i></a>"+
+                                                "<a class='btn btn-sm btn-danger hapusperilaku' kode='"+b.pivot.id+"'><i class='icon-trash'></i></a>"+
+                                            "</div>"+
+                                        "</td>"+
+                                    "</tr>";
+                                })
+                            }
+                        el+='</table>';
+
+                        $("#divPerilakuKerja").empty().html(el);
+                        $("#prestasi").DataTable({
+                            buttons: [
+                                'copy', 'excel', 'pdf'
+                            ],
+                            colVis: {
+                                buttonText: "<i class='icon-three-bars'></i> <span class='caret'></span>",
+                                align: "right",
+                                overlayFade: 200,
+                                showAll: "Show all",
+                                showNone: "Hide all"
+                            },
+                            bDestroy: true
+                        });
+                    },
+                    error:function(){
+                        $("#divPerilakuKerja").empty().html("<div class='alert alert-danger'>Failed load data</div>");
+                    }
+                })
+            }
+
             $(document).on("click","#tabDataSkp",function(){
                 showFormSkp();
             });
@@ -267,6 +343,10 @@
             $(document).on("click","#tabFormSkp",function(){
                 showFormSkpRealisasi();
             });
+
+            $(document).on("click","#tabPengukuran",function(){
+                showPerilakuKerja();
+            })
 
             $(document).on("click","a.addtarget",function(){
                 idtugas=$(this).attr("kode");
@@ -756,6 +836,231 @@
                         }
                     });
                 }else console.log("invalid form");
+            })
+
+            $(document).on("click","#addPerilaku",function(){
+                var el="";
+
+                el+='<div id="modalHistory" class="modal fade" data-backdrop="static" data-keyboard="false">'+
+                    '<div class="modal-dialog">'+
+                        '<div class="modal-content">'+
+                            '<div class="modal-header bg-info">'+
+                                '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
+                                '<h6 class="modal-title">Add Perilaku Kerja</h6>'+
+                            '</div>'+
+
+                            '<form class="form-horizontal" onsubmit="return false;" id="formAddPerilaku">'+
+                                '<div class="modal-body">'+
+                                    '<div id="pesanTarget"></div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label col-lg-4">Perilaku Kerja</label>'+
+                                        '<div class="col-lg-8">'+
+                                            '<input class="remote-data-perilaku" name="perilaku">'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label col-lg-4">Nilai</label>'+
+                                        '<div class="col-lg-8">'+
+                                            '<input class="form-control" name="nilai" placeholder="Nilai">'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+                                '<div class="modal-footer">'+
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+                                    '<button type="submit" class="btn btn-primary">Save</button>'+
+                                '</div>'+
+                            '</form>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>';
+
+                $("#divModal").empty().html(el);
+                $("#modalHistory").modal('show');
+
+                $(".remote-data-perilaku").select2({
+                    placeholder: "Cari Perilaku Kerja",
+                    ajax: {
+                        url: "{{URL::to('home/data/list-perilaku-by-skp')}}/"+skp_id,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                q: params, // search term
+                                page_limit: 50,
+                                type:"Add"
+                            };
+                        },
+                        results: function (data, page){
+                            return {
+                                results: data
+                            };
+                        },
+                        cache: true,
+                        pagination: {
+                            more: true
+                        }
+                    },
+                    formatResult: function(m){
+                        var markup="<option value='"+m.id+"'>"+m.text+"</option>";
+            
+                        return markup;
+                    },
+                    formatSelection: function(m){
+                        return m.text;
+                    },
+                    escapeMarkup: function (m) { return m; }
+                })
+            })
+
+            $(document).on("submit","#formAddPerilaku",function(e){
+                var data = new FormData(this);
+                data.append("skp",skp_id);
+                if($("#formAddPerilaku")[0].checkValidity()) {
+                    //updateAllMessageForms();
+                    e.preventDefault();
+                    $.ajax({
+                        url         : "{{URL::to('home/data/list-perilaku-by-skp')}}",
+                        type        : 'post',
+                        data        : data,
+                        dataType    : 'JSON',
+                        contentType : false,
+                        cache       : false,
+                        processData : false,
+                        beforeSend  : function (){
+                            $('#pesanTarget').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
+                        },
+                        success : function (data) {
+                            console.log(data);
+
+                            if(data.success==true){
+                                $('#pesanTarget').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
+                                showPerilakuKerja();
+                            }else{
+                                $('#pesanTarget').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
+                            }
+                        },
+                        error   :function() {  
+                            $('#pesanTarget').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
+                        }
+                    });
+                }else console.log("invalid form");
+            });
+
+            $(document).on("click","a.hapusperilaku",function(){
+                var ids=$(this).attr("kode");
+
+                swal({
+                    title: "Are you sure?",
+                    text: "You will delete data!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                    if (isConfirm) {
+                        $.ajax({
+                            url:"{{URL::to('home/data/list-perilaku-by-skp')}}/"+ids,
+                            type:"DELETE",
+                            success:function(result){
+                                if(result.success=true){
+                                    swal("Deleted!", result.pesan, "success");
+                                    showPerilakuKerja();
+                                }else{
+                                    swal("Error!", result.pesan, "error");
+                                }
+                            }
+                        })
+                    } else {
+                        swal("Cancelled", "Your data is safe :)", "error");
+                    }
+                });
+            })
+            
+            $(document).on("click",".editperilaku",function(){
+                var kode=$(this).attr("kode");
+                var idper=$(this).attr("idper");
+                var namaper=$(this).attr("namaper");
+                var nilai=$(this).attr("nilai");
+                var el="";
+
+                el+='<div id="modalHistory" class="modal fade" data-backdrop="static" data-keyboard="false">'+
+                    '<div class="modal-dialog">'+
+                        '<div class="modal-content">'+
+                            '<div class="modal-header bg-info">'+
+                                '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
+                                '<h6 class="modal-title">Add Perilaku Kerja</h6>'+
+                            '</div>'+
+
+                            '<form class="form-horizontal" onsubmit="return false;" id="formAddPerilaku">'+
+                                '<div class="modal-body">'+
+                                    '<div id="pesanTarget"></div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label col-lg-4">Perilaku Kerja</label>'+
+                                        '<div class="col-lg-8">'+
+                                            '<input type="hidden" name="kode" value="'+kode+'">'+
+                                            '<input class="remote-data-perilaku" name="perilaku" value="'+idper+'">'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label col-lg-4">Nilai</label>'+
+                                        '<div class="col-lg-8">'+
+                                            '<input class="form-control" name="nilai" placeholder="Nilai" value="'+nilai+'">'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>'+
+
+                                '<div class="modal-footer">'+
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+                                    '<button type="submit" class="btn btn-primary">Save</button>'+
+                                '</div>'+
+                            '</form>'+
+                        '</div>'+
+                    '</div>'+
+                '</div>';
+
+                $("#divModal").empty().html(el);
+                $("#modalHistory").modal('show');
+
+                $(".remote-data-perilaku").select2({
+                    initSelection: function(element, callback) {
+                        callback({id: idper, text: namaper });
+                    },
+                    ajax: {
+                        url: "{{URL::to('home/data/list-perilaku-by-skp')}}/"+skp_id,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                q: params, // search term
+                                page_limit: 50,
+                                type:"Add"
+                            };
+                        },
+                        results: function (data, page){
+                            return {
+                                results: data
+                            };
+                        },
+                        cache: true,
+                        pagination: {
+                            more: true
+                        }
+                    },
+                    formatResult: function(m){
+                        var markup="<option value='"+m.id+"'>"+m.text+"</option>";
+            
+                        return markup;
+                    },
+                    formatSelection: function(m){
+                        return m.text;
+                    },
+                    escapeMarkup: function (m) { return m; }
+                })
             })
 
 

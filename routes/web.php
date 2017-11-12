@@ -31,6 +31,10 @@ Route::group(['prefix'=>'home'],function(){
 	Route::put('tugas-jabatan/{id}','JabatanController@add_tugas');
 	Route::get('nilai-skp','NilaiController@nilai_skp');
 	Route::get('nilai-skp/{id}/report','NilaiController@nilai_skp_report');
+	Route::resource('users','UserController');
+	Route::get('report','HomeController@report');
+	Route::get('{id}/preview','NilaiController@preview_skp');
+	Route::get('{id}/export-xls','NilaiController@export_xls');
 
 	Route::group(['prefix'=>'data'],function(){
 		Route::post('save-session-sasaran','HomeController@save_session_sasaran');
@@ -61,5 +65,9 @@ Route::group(['prefix'=>'home'],function(){
 		Route::get('form-skp-realisasi/{id}','NilaiController@form_skp_realisasi');
 		Route::post('tugastambahan','NilaiController@tugas_tambahan_store');
 		Route::delete('tugastambahan/{id}','NilaiController@tugas_tambahan_delete');
+		Route::get('perilaku-kerja-by-id-skp/{id}','NilaiController@perilaku_kerja_by_id_skp');
+		Route::get('list-perilaku-by-skp/{id}','NilaiController@list_perilaku_by_skp');
+		Route::post('list-perilaku-by-skp','NilaiController@list_perilaku_by_skp_store');
+		Route::delete('list-perilaku-by-skp/{id}','NilaiController@list_perilaku_by_skp_delete');
 	});
 });

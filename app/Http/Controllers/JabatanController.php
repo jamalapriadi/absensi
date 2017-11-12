@@ -35,10 +35,6 @@ class JabatanController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);	
         }
-
-        return view('dashboard.jabatan.index')
-            ->with('home','Dashboard')
-            ->with('title','Jabatan');;
     }
 
     /**

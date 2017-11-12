@@ -31,6 +31,7 @@ class Nilaiskp extends Model
     }
 
     public function prestasi(){
-        return $this->hasMany('\App\Nilaiprestasi','nilai_skp_id');
+        return $this->belongsToMany('\App\Perilakukerja','nilai_prestasi_kerja','nilai_skp_id','perilaku_kerja_id')
+            ->withPivot(['id','nilai','uraian']);
     }
 }

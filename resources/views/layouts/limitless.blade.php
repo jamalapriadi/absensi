@@ -84,13 +84,13 @@
 
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="#" alt="Profile">
+                        {{Html::image('uploads/pegawai/'.\Auth::user()->foto),'',array('class'=>'')}}
 						<span>{{Auth::user()->name}}</span>
 						<i class="caret"></i>
 					</a>
 
 					<ul class="dropdown-menu dropdown-menu-right">
-						<li><a href="{{URL::to('home/profile')}}"><i class="icon-user-plus"></i> My profile</a></li>
+						{{--  <li><a href="{{URL::to('home/profile')}}"><i class="icon-user-plus"></i> My profile</a></li>  --}}
 						<li class="divider"></li>
 						<li>
 							<a href="{{ route('logout') }}"
@@ -126,7 +126,7 @@
 						<div class="category-content">
 							<div class="media">
 								<a href="#" class="media-left">
-                                    <img src="#" class='img-circle img-sm'>
+									{{Html::image('uploads/pegawai/'.\Auth::user()->foto),'',array('class'=>'img-circle img-sm')}}
                                 </a>
 								<div class="media-body">
 									<span class="media-heading text-semibold">{{\Auth::user()->name}}</span>
@@ -154,28 +154,28 @@
 							<ul class="navigation navigation-main navigation-accordion">
 
 								<ul class="navigation navigation-main navigation-accordion">
-									<li>
+									<li class="{{ Request::path() == 'home' ? 'active' : '' }}">
                                         <a href="{{URL::to('home')}}">
                                         <i class="icon-home2"></i> <span>Dashboard</span></a>
                                     </li>
-									<li>
+									<li class="{{ Request::path() == 'home/master' ? 'active' : '' }}">
                                         <a href="{{URL::to('home/master')}}">
                                         <i class="icon-stack3"></i> <span>Master</span></a>
                                     </li>
-									<li>
-                                        <a href="{{URL::to('home/jabatan')}}">
-                                        <i class="icon-medal2"></i> <span>Jabatan</span></a>
-                                    </li>
-									<li>
+									<li class="{{ Request::path() == 'home/pegawai' ? 'active' : '' }}">
                                         <a href="{{URL::to('home/pegawai')}}">
                                         <i class="icon-user-tie"></i> <span>Pegawai</span></a>
                                     </li>
+									<li class="{{ Request::path() == 'home/users' ? 'active' : '' }}">
+										<a href="{{URL::to('home/users')}}">
+											<i class="icon-users4"></i> User
+										</a>
 									<li>
 										<a href="#"><i class="icon-newspaper"></i> <span>Penilaian</span></a>
 										<ul>
-											<li><a href="{{URL::to('home/perilaku-kerja')}}">Perilaku Kerja</a></li>
-											<li><a href="{{URL::to('home/sasaran-kerja')}}">Sasaran Kerja</a></li>
-											<li><a href="{{URL::to('home/nilai-skp')}}">Nilai SKP</a></li>
+											<li class="{{ Request::path() == 'home/perilaku-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/perilaku-kerja')}}">Perilaku Kerja</a></li>
+											<li class="{{ Request::path() == 'home/sasaran-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/sasaran-kerja')}}">Sasaran Kerja</a></li>
+											<li class="{{ Request::path() == 'home/nilai-skp' ? 'active' : '' }}"><a href="{{URL::to('home/nilai-skp')}}">Nilai SKP</a></li>
 										</ul>
 									</li>
                                 </ul>

@@ -139,6 +139,8 @@ class PegawaiController extends Controller
                 'error'=>$validasi->errors()->all()
             );
         }else{
+            $filename="";
+
             $pegawai=new Pegawai;
             $pegawai->nip=$request->input('nip');
             $pegawai->tmk=$request->input('tmk');
@@ -169,6 +171,8 @@ class PegawaiController extends Controller
                 $user->name=$request->input('nama');
                 $user->email=$request->input('email');
                 $user->password=bcrypt($request->input('password'));
+                $user->level='pegawai';
+                $user->foto=$filename;
                 $simpanuser=$user->save();
 
                 if($simpanuser){
