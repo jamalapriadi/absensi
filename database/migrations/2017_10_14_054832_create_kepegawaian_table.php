@@ -28,7 +28,7 @@ class CreateKepegawaianTable extends Migration
 
         Schema::create('golongans', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->string('nama_golongan')->unique();
+            $table->string('nama_golongan',191)->unique();
             $table->timestamps();
         });
 
