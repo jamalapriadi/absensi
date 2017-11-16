@@ -158,26 +158,42 @@
                                         <a href="{{URL::to('home')}}">
                                         <i class="icon-home2"></i> <span>Dashboard</span></a>
                                     </li>
-									<li class="{{ Request::path() == 'home/master' ? 'active' : '' }}">
-                                        <a href="{{URL::to('home/master')}}">
-                                        <i class="icon-stack3"></i> <span>Master</span></a>
-                                    </li>
-									<li class="{{ Request::path() == 'home/pegawai' ? 'active' : '' }}">
-                                        <a href="{{URL::to('home/pegawai')}}">
-                                        <i class="icon-user-tie"></i> <span>Pegawai</span></a>
-                                    </li>
-									<li class="{{ Request::path() == 'home/users' ? 'active' : '' }}">
-										<a href="{{URL::to('home/users')}}">
-											<i class="icon-users4"></i> User
-										</a>
-									<li>
-										<a href="#"><i class="icon-newspaper"></i> <span>Penilaian</span></a>
-										<ul>
-											<li class="{{ Request::path() == 'home/perilaku-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/perilaku-kerja')}}">Perilaku Kerja</a></li>
-											<li class="{{ Request::path() == 'home/sasaran-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/sasaran-kerja')}}">Sasaran Kerja</a></li>
-											<li class="{{ Request::path() == 'home/nilai-skp' ? 'active' : '' }}"><a href="{{URL::to('home/nilai-skp')}}">Nilai SKP</a></li>
-										</ul>
-									</li>
+									@if(\Auth::user()->level=="admin")
+										<li class="{{ Request::path() == 'home/master' ? 'active' : '' }}">
+											<a href="{{URL::to('home/master')}}">
+											<i class="icon-stack3"></i> <span>Master</span></a>
+										</li>
+										<li class="{{ Request::path() == 'home/pegawai' ? 'active' : '' }}">
+											<a href="{{URL::to('home/pegawai')}}">
+											<i class="icon-user-tie"></i> <span>Pegawai</span></a>
+										</li>
+										<li class="{{ Request::path() == 'home/users' ? 'active' : '' }}">
+											<a href="{{URL::to('home/users')}}">
+												<i class="icon-users4"></i> User
+											</a>
+										<li>
+											<a href="#"><i class="icon-newspaper"></i> <span>Penilaian</span></a>
+											<ul>
+												<li class="{{ Request::path() == 'home/perilaku-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/perilaku-kerja')}}">Perilaku Kerja</a></li>
+												<li class="{{ Request::path() == 'home/sasaran-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/sasaran-kerja')}}">Sasaran Kerja</a></li>
+												<li class="{{ Request::path() == 'home/nilai-skp' ? 'active' : '' }}"><a href="{{URL::to('home/nilai-skp')}}">Nilai SKP</a></li>
+											</ul>
+										</li>
+									@endif
+
+									@if(\Auth::user()->level=="pegawai")
+										<li class="{{ Request::path() == 'home/nilai-harian' ? 'active' : '' }}">
+											<a href="{{URL::to('home/nilai-harian')}}">
+											<i class="icon-reading"></i> <span>Kegiatan</span></a>
+										</li>
+										<li>
+											<a href="#"><i class="icon-newspaper"></i> <span>Report</span></a>
+											<ul>
+												<li class="{{ Request::path() == 'home/report/kegiatan-harian' ? 'active' : '' }}"><a href="{{URL::to('home/report/kegiatan-harian')}}">Nilai Kegiatan</a></li>
+												<li class="{{ Request::path() == 'home/report/nilai-skp' ? 'active' : '' }}"><a href="{{URL::to('home/report/nilai-skp')}}">Nilai SKP</a></li>
+											</ul>
+										</li>
+									@endif
                                 </ul>
 							</ul>
 

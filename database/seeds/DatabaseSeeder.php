@@ -12,6 +12,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
+        // \App\User::where('level','pegawai')
+        // ->update(
+        //     [
+        //         'password'=>bcrypt('welcome')
+        //     ]
+        //     );
+        
         \DB::Table('instansi')
             ->insert(
                 [
