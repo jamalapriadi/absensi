@@ -264,6 +264,23 @@ class CreateKepegawaianTable extends Migration
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
+
+        Schema::create('nilai_kegiatan_harian',function(Blueprint $table){
+            $table->increments('id')->unsigned();
+            $table->integer('pegawai_id')->unsigned();
+            $table->date('tanggal')->nullable();
+            $table->time('jam')->nullable();
+            $table->string('kegiatan',191)->nullable();
+            $table->string('hasil',191)->nullable();
+            $table->string('keterangan',191)->nullable();
+            $table->timestamps();
+
+            $table->foreign('pegawai_id')
+                ->references('id')
+                ->on('pegawai')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
     }
 
     /**

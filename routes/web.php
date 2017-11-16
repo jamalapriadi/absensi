@@ -35,6 +35,13 @@ Route::group(['prefix'=>'home'],function(){
 	Route::get('report','HomeController@report');
 	Route::get('{id}/preview','NilaiController@preview_skp');
 	Route::get('{id}/export-xls','NilaiController@export_xls');
+	Route::resource('nilai-harian','NilaiharianController');
+
+	Route::group(['prefix'=>'report'],function(){
+		Route::get('kegiatan-harian','NilaiharianController@report_kegiatan_harian');
+		Route::get('kegiatan-harian-preview','NilaiharianController@report_kegiatan_harian_preview');
+		Route::get('nilai-skp','NilaiharianController@report_nilai_skp');
+	});
 
 	Route::group(['prefix'=>'data'],function(){
 		Route::post('save-session-sasaran','HomeController@save_session_sasaran');

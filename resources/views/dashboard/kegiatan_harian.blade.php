@@ -3,13 +3,13 @@
 @section('content')
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h6 class="panel-title">Perilaku Kerja</h6>
+            <h6 class="panel-title">Data Kegiatan Harian</h6>
         </div>
         <div class="panel-body">
-            <a class="btn btn-primary" id="addPerilaku">
+            <a class="btn btn-primary" id="addKegiatan">
                 <i class="icon-add"></i> Add New
             </a>
-            <table class="table table-striped datatable-colvis-basic-perilaku"></table>
+            <table class="table table-striped datatable-colvis-basic-kegiatan"></table>
         </div>
     </div>
 
@@ -17,9 +17,16 @@
 @stop
 
 @section('js')
+    {{Html::script('limitless1/assets/js/plugins/ui/moment/moment.min.js')}}
+    {{Html::script('limitless1/assets/js/plugins/pickers/daterangepicker.js')}}
+    {{Html::script('limitless1/assets/js/plugins/pickers/anytime.min.js')}}
+    {{Html::script('limitless1/assets/js/plugins/pickers/pickadate/picker.js')}}
+    {{Html::script('limitless1/assets/js/plugins/pickers/pickadate/picker.date.js')}}
+    {{Html::script('limitless1/assets/js/plugins/pickers/pickadate/picker.time.js')}}
+    {{Html::script('limitless1/assets/js/plugins/pickers/pickadate/legacy.js')}}
     <script>
         $(function(){
-            var idperilaku="";
+            var idharian="";
 
             // Setting datatable defaults
             $.extend( $.fn.dataTable.defaults, {
@@ -62,17 +69,22 @@
                 
             }
 
-            function showPerilaku(){
-                $('.datatable-colvis-basic-perilaku').DataTable({
+            function showKegiatan(){
+                $('.datatable-colvis-basic-kegiatan').DataTable({
                     processing: true,
                     serverSide: true,
                     autoWidth: true,
                     destroy: true,
-                    ajax: "{{URL::to('home/perilaku-kerja')}}",
+                    ajax: "{{URL::to('home/nilai-harian')}}",
                     columns: [
                         {data: 'no', name: 'no',title:'No.',searchable:false,width:'5%'},
-                        {data: 'nama_perilaku', name: 'nama_perilaku',title:'Perilaku'},
-                        {data: 'deskripsi', name: 'deskripsi',title:'Deskripsi'},
+                        {data: 'type_kegiatan', name: 'type_kegiatan',title:'Type'},
+                        {data: 'tanggal', name: 'tanggal',title:'Hari / Tanggal'},
+                        {data: 'dari_jam', name: 'dari_jam',title:'Dari Jam'},
+                        {data: 'sampai_jam', name: 'sampai_jam',title:'Sampai Jam'},
+                        {data: 'kegiatan', name: 'kegiatan',title:'Kegiatan'},
+                        {data: 'hasil', name: 'hasil',title:'Hasil / Volume'},
+                        {data: 'keterangan', name: 'keterangan',title:'Keterangan'},
                         {data: 'action', name: 'action',title:'',searchable:false,width:'17%'}
                     ],
                     buttons: [
@@ -102,28 +114,52 @@
                 $('.dataTables_length select').select2({
                     minimumResultsForSearch: "-1"
                 }); 
-            } 
+            }
 
-            $(document).on("click","#addPerilaku",function(){
+            $(document).on("click","#addKegiatan",function(){
                 var el="";
                 el+='<div id="modalHistory" class="modal fade" data-backdrop="static" data-keyboard="false">'+
                     '<div class="modal-dialog">'+
                         '<div class="modal-content">'+
                             '<div class="modal-header bg-info">'+
                                 '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
-                                '<h6 class="modal-title">Add New Perilaku Kerja</h6>'+
+                                '<h6 class="modal-title">Add New Kegiatan Harian</h6>'+
                             '</div>'+
 
-                            '<form class="form-horizontal" onsubmit="return false;" id="formPerilaku">'+
+                            '<form class="form-horizontal" onsubmit="return false;" id="formKegiatan">'+
                                 '<div class="modal-body">'+
-                                    '<div id="pesanPerilaku"></div>'+
+                                    '<div id="pesanKegiatan"></div>'+
                                     '<div class="form-group">'+
-                                        '<label class="control-label">Nama Perilaku Kerja</label>'+
-                                        '<input class="form-control" name="nama" placeholder="Nama Perilaku Kerja" required>'+
+                                        '<label class="control-label">Type Kegiatan</label>'+
+                                        '<select name="type" id="type" class="form-control">'+
+                                            '<option value="harian">Harian</option>'+
+                                            '<option value="bulanan">Bulanan</option>'+
+                                            '<option value="tahunan">Tahunan</option>'+
+                                        '</select>'+
                                     '</div>'+
                                     '<div class="form-group">'+
-                                        '<label class="control-label">Deskripsi</label>'+
-                                        '<textarea class="form-control" name="deskripsi" id="desc"></textarea>'+
+                                        '<label class="control-label">Tanggal</label>'+
+                                        '<input class="form-control pickadate-year" name="tanggal" placeholder="Tanggal" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Dari Jam</label>'+
+                                        '<input class="form-control pickatime" name="darijam" placeholder="Dari Jam" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Sampai Jam</label>'+
+                                        '<input class="form-control pickatime" name="sampaijam" placeholder="Sampai Jam" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Kegiatan</label>'+
+                                        '<input class="form-control" name="kegiatan" placeholder="Kegiatan" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Hasil / Volume</label>'+
+                                        '<input class="form-control" name="hasil" placeholder="Hasil" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Keterangan</label>'+
+                                        '<textarea name="keterangan" id="desc"></textarea>'+
                                     '</div>'+
                                 '</div>'+
 
@@ -139,17 +175,25 @@
                 $("#divModal").empty().html(el);
                 $("#modalHistory").modal('show');
                 getCkeditor();
+
+                $('.pickadate-year').pickadate({
+                    selectYears: true,
+                    selectMonths: true,
+                    selectYears: 4
+                });
+
+                $('.pickatime').pickatime();
             })
 
-            $(document).on("submit","#formPerilaku",function(e){
+            $(document).on("submit","#formKegiatan",function(e){
                 var data = new FormData(this);
                 var desc = CKEDITOR.instances.desc.getData();
                 data.append("desc", desc);
-                if($("#formPerilaku")[0].checkValidity()) {
+                if($("#formKegiatan")[0].checkValidity()) {
                     //updateAllMessageForms();
                     e.preventDefault();
                     $.ajax({
-                        url         : "{{URL::to('home/perilaku-kerja')}}",
+                        url         : "{{URL::to('home/nilai-harian')}}",
                         type        : 'post',
                         data        : data,
                         dataType    : 'JSON',
@@ -157,31 +201,31 @@
                         cache       : false,
                         processData : false,
                         beforeSend  : function (){
-                            $('#pesanPerilaku').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
+                            $('#pesanKegiatan').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
                         },
                         success : function (data) {
                             console.log(data);
 
                             if(data.success==true){
-                                $('#pesanPerilaku').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
-                                showPerilaku();
+                                $('#pesanKegiatan').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
+                                showKegiatan();
                             }else{
-                                $('#pesanPerilaku').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
+                                $('#pesanKegiatan').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
                             }
                         },
                         error   :function() {  
-                            $('#pesanPerilaku').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
+                            $('#pesanKegiatan').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
                         }
                     });
                 }else console.log("invalid form");
             });
 
-            $(document).on("click","a.editperilaku",function(){
-                idperilaku=$(this).attr("kode");
+            $(document).on("click","a.editharian",function(){
+                idharian=$(this).attr("kode");
                 var el="";
                 
                 $.ajax({
-                    url:"{{URL::to('home/perilaku-kerja')}}/"+idperilaku,
+                    url:"{{URL::to('home/nilai-harian')}}/"+idharian,
                     type:"GET",
                     beforeSend:function(){
                         el+='<div id="modalHistory" class="modal fade" data-backdrop="static" data-keyboard="false">'+
@@ -189,29 +233,53 @@
                                 '<div class="modal-content">'+
                                     '<div class="modal-header bg-info">'+
                                         '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
-                                        '<h6 class="modal-title">Edit Perilaku</h6>'+
+                                        '<h6 class="modal-title">Edit Nilai Harian</h6>'+
                                     '</div>'+
 
-                                    '<div id="divFormPerilaku"></div>'+
+                                    '<div id="divFormKegiatan"></div>'+
                                 '</div>'+
                             '</div>'+
                         '</div>';
 
                         $("#divModal").empty().html(el);
-                        $('#divFormPerilaku').empty().html('<div class="panel-body"><div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div></div>');
+                        $('#divFormKegiatan').empty().html('<div class="panel-body"><div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div></div>');
                         $("#modalHistory").modal('show');
                     },
                     success:function(result){
-                        el+="<form class='form-horizontal' id='formUpdatePerilaku' onsubmit='return false;'>"+
+                        el+="<form class='form-horizontal' id='formUpdateKegiatan' onsubmit='return false;'>"+
                                 "<div class='panel-body'>"+
-                                    '<div id="pesanPerilaku"></div>'+
+                                    '<div id="pesanKegiatan"></div>'+
                                     '<div class="form-group">'+
-                                        '<label class="control-label">Nama Perilaku Kerja</label>'+
-                                        '<input class="form-control" name="nama" placeholder="Nama Perilaku Kerja" value="'+result.nama_perilaku+'" required>'+
+                                        '<label class="control-label">Type Kegiatan</label>'+
+                                        '<select name="type" id="type" class="form-control">'+
+                                            '<option value="harian">Harian</option>'+
+                                            '<option value="bulanan">Bulanan</option>'+
+                                            '<option value="tahunan">Tahunan</option>'+
+                                        '</select>'+
                                     '</div>'+
                                     '<div class="form-group">'+
-                                        '<label class="control-label">Deskripsi</label>'+
-                                        '<textarea class="form-control" name="deskripsi" id="desc">'+result.deskripsi+'</textarea>'+
+                                        '<label class="control-label">Tanggal</label>'+
+                                        '<input class="form-control pickadate-year" value="'+result.tanggal+'" name="tanggal" placeholder="Tanggal" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Dari Jam</label>'+
+                                        '<input class="form-control pickatime" name="darijam" value="'+result.dari_jam+'" placeholder="Dari Jam" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Sampai Jam</label>'+
+                                        '<input class="form-control pickatime" name="sampaijam" value="'+result.sampai_jam+'" placeholder="Sampai Jam" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Kegiatan</label>'+
+                                        '<input class="form-control" name="kegiatan" value="'+result.kegiatan+'" placeholder="Kegiatan" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Hasil / Volume</label>'+
+                                        '<input class="form-control" name="hasil" value="'+result.hasil+'" placeholder="Hasil" required>'+
+                                    '</div>'+
+                                    '<div class="form-group">'+
+                                        '<label class="control-label">Keterangan</label>'+
+                                        '<textarea name="keterangan" id="desc">"'+result.keterangan+'"</textarea>'+
                                     '</div>'+
                                 "</div>"+
                                 '<div class="modal-footer">'+
@@ -220,8 +288,18 @@
                                 '</div>'+
                             "</form>";
 
-                        $('#divFormPerilaku').empty().html(el);
+                        $('#divFormKegiatan').empty().html(el);
                         getCkeditor();
+
+                        $('.pickadate-year').pickadate({
+                            selectYears: true,
+                            selectMonths: true,
+                            selectYears: 4
+                        });
+
+                        $('.pickatime').pickatime();
+
+                        $("#type").val(result.type_kegiatan);
                     },
                     error:function(){
                         
@@ -229,16 +307,16 @@
                 })
             })
 
-            $(document).on("submit","#formUpdatePerilaku",function(e){
+            $(document).on("submit","#formUpdateKegiatan",function(e){
                 var data = new FormData(this);
                 var desc = CKEDITOR.instances.desc.getData();
                 data.append("desc", desc);
                 data.append("_method","PUT");
-                if($("#formUpdatePerilaku")[0].checkValidity()) {
+                if($("#formUpdateKegiatan")[0].checkValidity()) {
                     //updateAllMessageForms();
                     e.preventDefault();
                     $.ajax({
-                        url         : "{{URL::to('home/perilaku-kerja')}}/"+idperilaku,
+                        url         : "{{URL::to('home/nilai-harian')}}/"+idharian,
                         type        : 'post',
                         data        : data,
                         dataType    : 'JSON',
@@ -246,27 +324,27 @@
                         cache       : false,
                         processData : false,
                         beforeSend  : function (){
-                            $('#pesanPerilaku').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
+                            $('#pesanKegiatan').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
                         },
                         success : function (data) {
                             console.log(data);
 
                             if(data.success==true){
-                                $('#pesanPerilaku').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
-                                showPerilaku();
+                                $('#pesanKegiatan').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
+                                showKegiatan();
                             }else{
-                                $('#pesanPerilaku').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
+                                $('#pesanKegiatan').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
                             }
                         },
                         error   :function() {  
-                            $('#pesanPerilaku').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
+                            $('#pesanKegiatan').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
                         }
                     });
                 }else console.log("invalid form");
             });
 
-            $(document).on("click","a.hapusperilaku",function(){
-                idperilaku=$(this).attr("kode");
+            $(document).on("click","a.hapusharian",function(){
+                idharian=$(this).attr("kode");
 
                 swal({
                     title: "Are you sure?",
@@ -282,12 +360,12 @@
                 function(isConfirm){
                     if (isConfirm) {
                         $.ajax({
-                            url:"{{URL::to('home/perilaku-kerja')}}/"+idperilaku,
+                            url:"{{URL::to('home/nilai-harian')}}/"+idharian,
                             type:"DELETE",
                             success:function(result){
                                 if(result.success=true){
                                     swal("Deleted!", result.pesan, "success");
-                                    showPerilaku();
+                                    showKegiatan();
                                 }else{
                                     swal("Error!", result.pesan, "error");
                                 }
@@ -299,7 +377,8 @@
                 });
             })
 
-            showPerilaku();
+            showKegiatan();
         })
+
     </script>
 @stop
