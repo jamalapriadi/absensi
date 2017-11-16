@@ -15,4 +15,8 @@ class Jabatan extends Model
     public static $pesan=[
         'nama.required'=>'Nama harus diisi'
     ];
+
+    public function tugas(){
+        return $this->hasMany('\App\Tugasjabatan');
+    }
 }

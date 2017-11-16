@@ -2,9 +2,29 @@
 
 @section('content')
     <form class="form-horizontal" name="formPegawai" id="formPegawai" onsubmit="return false;" enctype="multipart/form-data">
+        {{--  <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h6 class="panel-title">User Account</h6>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Email</label>
+                    <div class="col-lg-8">
+                        <input type="email" class="form-control" name="email" placeholder="Email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Passoword</label>
+                    <div class="col-lg-8">
+                        <input type="password" class="form-control" name="passoword" placeholder="Passoword">
+                    </div>
+                </div>
+            </div>
+        </div>  --}}
+
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h6 class="panel-title">Add New Pegawai</h6>
+                <h6 class="panel-title">Edit Pegawai</h6>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -63,6 +83,78 @@
             </div>
         </div>
 
+        @if(count($pegawai->pangkat)>0)
+            @foreach($pegawai->pangkat as $p)
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">Pangkat</h6>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="" class="col-lg-2 control-label">Status Pegawai</label>
+                            <div class="col-lg-8">
+                                <select name="status" id="status" class="form-control">
+                                    <option value="">--Pilih Status--</option>
+                                    @foreach($status as $row)
+                                        <option value="{{$row->id}}" @if($row->id==$pegawai->status_id) selected='selected' @endif>{{$row->nama_status}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="" class="col-lg-2 control-label">Pangkat</label>
+                            <div class="col-lg-8">
+                                <select name="pangkat" id="pangkat" class="form-control">
+                                    <option value="">--Pilih Pangkat--</option>
+                                    @foreach($pangkat as $row)
+                                        <option value="{{$row->id}}" @if($row->id==$p->id) selected='selected' @endif>{{$row->nama_pangkat}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">TMT</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control pickadate-year" name="tmtpangkat" value="{{$p->pivot->tmt}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
+        @if(count($pegawai->jabatan)>0)
+            @foreach($pegawai->jabatan as $j)
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">Jabatan</h6>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="" class="col-lg-2 control-label">Jabatan</label>
+                            <div class="col-lg-8">
+                                <select name="jabatan" id="jabatan" class="form-control">
+                                    <option value="">--Pilih Jabatan--</option>
+                                    @foreach($jabatan as $row)
+                                        <option value="{{$row->id}}" @if($j->id==$row->id) selected='selected' @endif>{{$row->nama_jabatan}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="" class="col-lg-2 control-label">TMT</label>
+                            <div class="col-lg-8">
+                                <input type="text" name="tmtjabatan" class="form-control pickadate-year" value="{{$j->pivot->tmt}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="pesanPegawai"></div>
@@ -71,6 +163,8 @@
                     <i class="icon-floppy-disk"></i>
                     Simpan
                 </button>
+
+                <a href="{{URL::to('home/pegawai')}}" class="btn btn-default">Kembali</a>
             </div>
         </div>
     </form>
