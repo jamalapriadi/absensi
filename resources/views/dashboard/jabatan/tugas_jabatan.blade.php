@@ -146,9 +146,12 @@
                                             '<option value="">--Pilih Output--</option>'+
                                             '<option value="Keg">Kegiatan</option>'+
                                             '<option value="Berkas">Berkas</option>'+
+                                            '<option value="Putusan">Putusan</option>'+
+                                            '<option value="Perkara">Perkara</option>'+
+                                            '<option value="Sidang">Sidang</option>'+
                                             '<option value="Daftar">Daftar</option>'+
                                             '<option value="Dok">Dokumen</option>'+
-                                            '<option value="Lap">Laporam</option>'+
+                                            '<option value="Lap">Laporan</option>'+
                                         '</select>'+
                                     '</div>'+
                                     '<div class="form-group">'+
@@ -262,6 +265,9 @@
                                         '<option value="">--Pilih Output--</option>'+
                                         '<option value="Keg">Kegiatan</option>'+
                                         '<option value="Berkas">Berkas</option>'+
+                                        '<option value="Putusan">Putusan</option>'+
+                                        '<option value="Perkara">Perkara</option>'+
+                                        '<option value="Sidang">Sidang</option>'+
                                         '<option value="Daftar">Daftar</option>'+
                                         '<option value="Dok">Dokumen</option>'+
                                         '<option value="Lap">Laporam</option>'+
