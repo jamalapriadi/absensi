@@ -11,4 +11,8 @@ class Tugasjabatan extends Model
     public function target(){
         return $this->hasMany('App\Targetjabatan','tugas_jabatan_id');
     }
+
+    public function realisasi(){
+        return $this->hasMany('App\Targetjabatan','tugas_jabatan_id');
+    }
 }

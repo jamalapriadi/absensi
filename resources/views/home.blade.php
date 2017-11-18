@@ -68,53 +68,50 @@
                 <table class="table text-nowrap">
                     <thead>
                         <tr>
-                            <th style="width: 50px">Due</th>
-                            <th style="width: 300px;">User</th>
-                            <th>Description</th>
+                            <th style="width: 50px">Tanggal</th>
+                            <th style="width: 300px;">Pegawai</th>
+                            <th style="width: 300px;">Jam</th>
+                            <th>Kegiatan</th>
+                            <th>Hasil</th>
+                            <th>Keterangan</th>
                             <th class="text-center" style="width: 20px;"><i class="icon-arrow-down12"></i></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-center">
-                                <h6 class="no-margin">12 <small class="display-block text-size-small no-margin">hours</small></h6>
-                            </td>
-                            <td>
-                                <div class="media-left media-middle">
-                                    <a href="#" class="btn bg-teal-400 btn-rounded btn-icon btn-xs">
-                                        <span class="icon-add"></span>
-                                    </a>
-                                </div>
+                        @foreach($nilai as $row)
+                            <tr>
+                                <td class="text-center">
+                                    <h6 class="no-margin">{{date('d',strtotime($row->tanggal))}} <small class="display-block text-size-small no-margin">{{date('F Y',strtotime($row->tanggal))}}</small></h6>
+                                </td>
+                                <td>
+                                    <div class="media-left media-middle">
+                                        {{Html::image('uploads/pegawai/'.$row->pegawai->foto,'',array('class'=>'img-responsive'))}}
+                                    </div>
 
-                                <div class="media-body">
-                                    <a href="#" class="display-inline-block text-default text-semibold letter-icon-title">Annabelle Doney</a>
-                                    <div class="text-muted text-size-small"><span class="status-mark border-blue position-left"></span> Active</div>
-                                </div>
-                            </td>
-                            <td>
-                                <a href="#" class="text-default display-inline-block">
-                                    <span class="text-semibold">[#1183] Workaround for OS X selects printing bug</span>
-                                    <span class="display-block text-muted">Chrome fixed the bug several versions ago, thus rendering this...</span>
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                <ul class="icons-list">
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-menu7"></i></a>
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            <li><a href="#"><i class="icon-undo"></i> Quick reply</a></li>
-                                            <li><a href="#"><i class="icon-history"></i> Full history</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#"><i class="icon-checkmark3 text-success"></i> Resolve issue</a></li>
-                                            <li><a href="#"><i class="icon-cross2 text-danger"></i> Close issue</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </td>
-                        </tr>
+                                    <div class="media-body">
+                                        <a href="#" class="display-inline-block text-default text-semibold letter-icon-title">{{$row->pegawai->nama_lengkap}}</a>
+                                        <div class="text-muted text-size-small">{{$row->pegawai->jabatan[0]->nama_jabatan}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p>{{$row->dari_jam}} - {{$row->sampai_jam}}</p>
+                                </td>
+                                <td>
+                                    {{$row->kegiatan}}
+                                </td>
+                                <td>
+                                    {{$row->hasil}}
+                                </td>
+                                <td>
+                                    {{$row->keterangan}}
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
+
+            {{$nilai->links()}}
         </div>
     </div>
 @endsection

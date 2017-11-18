@@ -9,11 +9,6 @@
                     <i class="icon-file-excel"></i>
                     Export Excel
                 </a>
-
-                <a class="btn btn-success" href="">
-                    <i class="icon-file-pdf"></i>
-                    Export PDF
-                </a>
             </div>
         </div>
         <table class="table table-bordered">
