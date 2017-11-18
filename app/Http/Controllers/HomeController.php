@@ -33,6 +33,18 @@ class HomeController extends Controller
                 ->leftJoin('tugas_jabatan_target as b','b.tugas_jabatan_id','=','tugas_jabatan.id')
                 ->where('b.type','realisasi')
                 ->get();
+            
+            $nilai=\App\Nilaiharian::select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','type_kegiatan',
+                'pegawai_id','type_kegiatan','tanggal','dari_jam','sampai_jam','kegiatan',
+                'hasil','keterangan')
+                ->with('pegawai');
+            
+            if(\Auth::user()->level=="pegawai"){
+                $user=\App\User::with('pegawai')->find(\Auth::user()->id);
+                $nilai=$nilai->where('pegawai_id',$user->pegawai[0]->id);
+            }
+
+            $nilai=$nilai->paginate(20);
 
             return view('home')
                 ->with('home','Dashboard')
@@ -40,7 +52,8 @@ class HomeController extends Controller
                 ->with('sasaran',$sasaran)
                 ->with('pegawai',$pegawai)
                 ->with('skp',$skp)
-                ->with('pengukuran',$pengukuran);
+                ->with('pengukuran',$pengukuran)
+                ->with('nilai',$nilai);
         }else{
             $sasaran=\App\Sasarankerja::all();
             return view('sasaran')
@@ -119,11 +132,8 @@ class HomeController extends Controller
                                 <i class='icon-search4'></i>
                                 </a>";
 
-                            $html.="<a href='#' class='btn btn-warning btn-sm' title='Export Excel' kode='".$row->id."'>
+                            $html.="<a href='".\URL::to('home/'.$row->id.'/export-xls')."' class='btn btn-warning btn-sm' title='Export Excel' kode='".$row->id."'>
                                 <i class='icon-file-excel'></i>
-                                </a>";
-                            $html.="<a href='#' class='btn btn-danger btn-sm' title='Export PDF' kode='".$row->id."'>
-                                <i class='icon-file-pdf'></i>
                                 </a>";
                         $html.="</div>";
                         return $html;
