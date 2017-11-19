@@ -19,6 +19,10 @@ class Pegawai extends Model
     public function status(){
         return $this->hasOne('\App\Statuspegawai');
     }
+    
+    public function atasan(){
+        return $this->belongsTO('\App\Pegawai','atasan_langsung');
+    }
 
     public function user(){
         return $this->belongsToMany('\App\User','user_pegawai','pegawai_id','user_id');

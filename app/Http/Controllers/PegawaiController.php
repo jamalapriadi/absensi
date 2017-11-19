@@ -113,11 +113,13 @@ class PegawaiController extends Controller
         $status=\App\Status::select('id','nama_status')->get();
         $pangkat=\App\Pangkat::select('id','nama_pangkat','ruang')->get();
         $jabatan=\App\Jabatan::select('id','nama_jabatan')->get();
+        $pegawai=\App\Pegawai::select('id','nama_lengkap')->get();
 
         return view('dashboard.pegawai.create')
             ->with('status',$status)
             ->with('pangkat',$pangkat)
             ->with('jabatan',$jabatan)
+            ->with('atasan',$pegawai)
             ->with('home','Dashboard')
             ->with('title','Add New Pegawai');
     }
@@ -152,6 +154,10 @@ class PegawaiController extends Controller
             $pegawai->status_id=$request->input('status');
             $pegawai->active='Y';
 
+            if($request->has('atasan')){
+                $pegawai->atasan_langsung=$request->input('atasan');
+            }
+
             if($request->hasFile('file')){
                 if (!is_dir('uploads/pegawai/')) {
                     mkdir('uploads/pegawai/', 0777, TRUE);
@@ -171,7 +177,7 @@ class PegawaiController extends Controller
                 $user->name=$request->input('nama');
                 $user->email=$request->input('email');
                 $user->password=bcrypt($request->input('password'));
-                $user->level='pegawai';
+                $user->level=$request->input('level');
                 $user->foto=$filename;
                 $simpanuser=$user->save();
 
@@ -234,7 +240,8 @@ class PegawaiController extends Controller
                         $q->where('active','Y');
                     },
                     'status.pangkat',
-                    'status.kepegawaian'
+                    'status.kepegawaian',
+                    'atasan'
                 ]
             )->find($id);
 
@@ -263,12 +270,14 @@ class PegawaiController extends Controller
         $status=\App\Status::select('id','nama_status')->get();
         $pangkat=\App\Pangkat::select('id','nama_pangkat','ruang')->get();
         $jabatan=\App\Jabatan::select('id','nama_jabatan')->get();
+        $atasan=\App\Pegawai::select('id','nama_lengkap')->get();
 
         return view('dashboard.pegawai.edit')
             ->with('pegawai',$pegawai)
             ->with('status',$status)
             ->with('pangkat',$pangkat)
             ->with('jabatan',$jabatan)
+            ->with('atasan',$atasan)
             ->with('home','Edit Pegawai')
             ->with('title',$pegawai->nama_lengkap);
     }
@@ -301,6 +310,10 @@ class PegawaiController extends Controller
             $pegawai->alamat=$request->input('alamat');
             $pegawai->status_id=$request->input('status');
             $pegawai->active='Y';
+
+            if($request->has('atasan')){
+                $pegawai->atasan_langsung=$request->input('atasan');
+            }
 
             if($request->hasFile('file')){
                 if (!is_dir('uploads/pegawai/')) {
