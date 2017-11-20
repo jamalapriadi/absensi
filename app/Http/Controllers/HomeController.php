@@ -124,6 +124,11 @@ class HomeController extends Controller
                     'pejabat_penilai',
                     'atasan_pejabat_penilai'
                 );
+            
+            if(\Auth::user()->level=="pegawai"){
+                $user=\App\User::with('pegawai','pegawai.atasan','pegawai.jabatan')->find(\Auth::user()->id);
+                $nilai=$nilai->where('pegawai_id',$user->pegawai[0]->id);
+            }
 
             return $dataTables->eloquent($nilai)   
                 ->addColumn('action',function($row){

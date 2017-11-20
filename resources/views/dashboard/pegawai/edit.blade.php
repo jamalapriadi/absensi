@@ -156,6 +156,25 @@
         @endif
 
         <div class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="panel-title">Atasan</h6>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Atasan</label>
+                    <div class="col-lg-8">
+                        <select name="atasan" id="atasan" class="form-control">
+                            <option value="">--Pilih Atasan--</option>
+                            @foreach($atasan as $row)
+                                <option value="{{$row->id}}" @if($row->id==$pegawai->atasan_langsung) selected='selected' @endif>{{$row->nama_lengkap}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
             <div class="panel-body">
                 <div id="pesanPegawai"></div>
 

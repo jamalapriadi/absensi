@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -76,5 +76,9 @@ Route::group(['prefix'=>'home'],function(){
 		Route::get('list-perilaku-by-skp/{id}','NilaiController@list_perilaku_by_skp');
 		Route::post('list-perilaku-by-skp','NilaiController@list_perilaku_by_skp_store');
 		Route::delete('list-perilaku-by-skp/{id}','NilaiController@list_perilaku_by_skp_delete');
+
+		Route::post('kegiatan-harian-preview','NilaiharianController@preview_kegiatan_harian');
+		Route::get('export-kegiatan-harian','NilaiharianController@export_kegiatan_harian');
+		Route::post('report-skp-preview','NilaiharianController@report_skp_preview');
 	});
 });

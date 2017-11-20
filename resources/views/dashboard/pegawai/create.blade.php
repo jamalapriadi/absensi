@@ -19,6 +19,17 @@
                         <input type="password" class="form-control" name="passoword" placeholder="Passoword">
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Level</label>
+                    <div class="col-lg-8">
+                        <select name="level" id="level" class="form-control">
+                            <option value="">--Pilih Level--</option>
+                            <option value="pegawai">Pegawai</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -140,6 +151,25 @@
                     <label for="" class="col-lg-2 control-label">TMT</label>
                     <div class="col-lg-8">
                         <input type="text" name="tmtjabatan" class="form-control pickadate-year">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="panel-title">Atasan</h6>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Atasan</label>
+                    <div class="col-lg-8">
+                        <select name="atasan" id="atasan" class="form-control">
+                            <option value="">--Pilih Atasan--</option>
+                            @foreach($atasan as $row)
+                                <option value="{{$row->id}}">{{$row->nama_lengkap}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Aplikasi Kepegawaian</title>
+	<title>Pengadilan Negeri Tegal</title>
 
 	<!-- Global stylesheets -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -177,6 +177,14 @@
 												<li class="{{ Request::path() == 'home/perilaku-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/perilaku-kerja')}}">Perilaku Kerja</a></li>
 												<li class="{{ Request::path() == 'home/sasaran-kerja' ? 'active' : '' }}"><a href="{{URL::to('home/sasaran-kerja')}}">Sasaran Kerja</a></li>
 												<li class="{{ Request::path() == 'home/nilai-skp' ? 'active' : '' }}"><a href="{{URL::to('home/nilai-skp')}}">Nilai SKP</a></li>
+											</ul>
+										</li>
+
+										<li>
+											<a href="#"><i class="icon-drawer3"></i> <span>Report</span></a>
+											<ul>
+												<li class="{{ Request::path() == 'home/report/kegiatan-harian' ? 'active' : '' }}"><a href="{{URL::to('home/report/kegiatan-harian')}}">Nilai Kegiatan</a></li>
+												<li class="{{ Request::path() == 'home/report/nilai-skp' ? 'active' : '' }}"><a href="{{URL::to('home/report/nilai-skp')}}">Nilai SKP</a></li>
 											</ul>
 										</li>
 									@endif
