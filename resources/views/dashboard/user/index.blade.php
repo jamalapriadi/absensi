@@ -58,6 +58,7 @@
                         {data: 'name', name: 'name',title:'Nama'},
                         {data: 'email', name: 'email',title:'Email'},
                         {data: 'level', name: 'level',title:'Level'},
+                        {data: 'reset', name: 'reset',title:'',searchable:false,width:'17%'},
                         {data: 'action', name: 'action',title:'',searchable:false,width:'17%'}
                     ],
                     buttons: [
@@ -314,6 +315,50 @@
                         swal("Cancelled", "Your data is safe :)", "error");
                     }
                 });
+            })
+
+            $(document).on("click",".resetuser",function(){
+                iduser=$(this).attr("kode");
+                var el="";
+
+                $.ajax({
+                    url:"{{URL::to('home/data/reset-password')}}",
+                    data:"user="+iduser,
+                    type:"POST",
+                    beforeSend:function(){
+                        el+='<div id="modalHistory" class="modal fade" data-backdrop="static" data-keyboard="false">'+
+                            '<div class="modal-dialog">'+
+                                '<div class="modal-content">'+
+                                    '<div class="modal-header bg-info">'+
+                                        '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
+                                        '<h6 class="modal-title">Reset Password</h6>'+
+                                    '</div>'+
+
+                                    '<div class="panel-body">'+
+                                        '<div id="pesanUser"></div>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>';
+
+                        $("#divModal").empty().html(el);
+                        $('#pesanUser').empty().html('<div class="alert alert-info"><i class="fa fa-spinner fa-2x fa-spin"></i>&nbsp;Please wait for a few minutes</div>');
+                        $("#modalHistory").modal('show');
+                    },
+                    success : function (data) {
+                        console.log(data);
+
+                        if(data.success==true){
+                            $('#pesanUser').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
+                            showUser();
+                        }else{
+                            $('#pesanUser').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
+                        }
+                    },
+                    error   :function() {  
+                        $('#pesanUser').empty().html('<div class="alert alert-danger">Oppss Your request not send....</div>');
+                    }
+                })
             })
 
             showUser();

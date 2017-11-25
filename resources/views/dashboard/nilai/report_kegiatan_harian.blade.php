@@ -17,6 +17,18 @@
                             @endforeach
                         </select>
                     </div>
+                @else 
+                    @if(count($bawahan)>0)
+                        <div class="form-group">
+                            <label class="control-label">Pegawai</label>
+                            <select name="pegawai" class="form-control" id="pegawai">
+                                <option value="">--Pilih Pegawai</option>
+                                @foreach($bawahan as $row)
+                                    <option value="{{$row->id}}">{{$row->nama_lengkap}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                 @endif
                 <div class="form-group">
                     <label class="control-label">Dari Tanggal</label>
@@ -81,7 +93,7 @@
 
                             if(data.success==true){
                                 var el="";
-                                var url="{{URL::to('home/data/export-kegiatan-harian')}}?dari="+data.dari+"&sampai="+data.sampai;
+                                var url="{{URL::to('home/data/export-kegiatan-harian')}}?dari="+data.dari+"&sampai="+data.sampai+"&pegawai="+data.pegawai;
 
                                 el+="<a href='"+url+"' class='btn btn-primary'><i class='icon-file-excel'></i> Export Excel</a>";
 

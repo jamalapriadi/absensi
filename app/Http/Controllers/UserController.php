@@ -21,6 +21,20 @@ class UserController extends Controller
             $user=User::select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','name','email','level','foto');
             
             return $dataTables->eloquent($user)   
+                ->addColumn('reset',function($row){
+                    $disabled="";
+                    if(\Auth::user()->level=="admin"){
+                        $disabled="";
+                    }else{
+                        $disabled="disabled";
+                    }
+
+                    $html="<a href='#' ".$disabled." class='btn btn-success btn-sm resetuser' title='Reset Password' kode='".$row->id."'>
+                            <i class='fa fa-history'></i> Reset Password
+                            </a>";
+                    
+                    return $html;
+                })
                 ->addColumn('action',function($row){
                     $disabled="";
                     if(\Auth::user()->level=="admin"){
@@ -38,7 +52,7 @@ class UserController extends Controller
                     $html.="</div>";
                     return $html;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','reset'])
                 ->make(true);
         }
 
@@ -213,5 +227,76 @@ class UserController extends Controller
         }
 
         return $data;
+    }
+
+    public function reset_password(Request $request){
+        if($request->ajax()){
+            $user=User::find($request->input('user'));
+
+            $user->password=bcrypt('welcome');
+            $simpan=$user->save();
+
+            if($simpan){
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Password Berhasil direset, new password = welcome'
+                );
+            }else{
+                $data=array(
+                    'success'=>false,
+                    'pesan'=>'Password Gagal direset'
+                );
+            }
+
+            return $data;
+        }
+    }
+
+    public function change_password(Request $request){
+        if($request->ajax()){
+            $rules=[
+                'current'=>'required',
+                'password'=>'required',
+                'password_confirmation'=>'required|same:password'
+            ];
+
+            $pesan=[
+                'current.required'=>'Current password harus diisi',
+                'password.required'=>'Password harus diisi',
+                'password_confirmation.required'=>'Confirmasi password harus diisi'
+            ];
+
+            $validasi=\Validator::make($request->all(),$rules,$pesan);
+
+            if($validasi->fails()){
+                $data=array(
+                    'success'=>false,
+                    'pesan'=>'Validasi gagal',
+                    'error'=>$validasi->errors()->all()
+                );
+            }else{
+                if(\Hash::check($request->input('current'), \Auth::user()->password)){
+                    $user=\App\User::find(\Auth::user()->id);
+                    $user->password=bcrypt($request->input('password'));
+                    $user->save();
+
+                    $data=array(
+                        'success'=>true,
+                        'pesan'=>'Password has been change',
+                        'error'=>''
+                    );
+
+                    \Auth::logout();
+                }else{
+                    $data=array(
+                        'success'=>false,
+                        'pesan'=>'Current password wrong',
+                        'error'=>''
+                    );
+                }
+            }
+
+            return $data;
+        }
     }
 }

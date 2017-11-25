@@ -24,11 +24,12 @@ class PegawaiController extends Controller
                     },
                     'jabatan'=>function($q){
                         $q->where('active','Y');
-                    }
+                    },
+                    'atasan'
                 ]
             )
             ->select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','nip','tmk','nama_lengkap',
-                'tempat_lahir','tanggal_lahir','agama','alamat','active','foto');
+                'tempat_lahir','tanggal_lahir','agama','alamat','active','foto','atasan_langsung');
             
             if($request->has('status')){
                 $pegawai=$pegawai->where('status_id',$request->input('status'));
@@ -88,7 +89,7 @@ class PegawaiController extends Controller
                     return $html;
                 })
                 ->rawColumns(['action','gambar'])
-                ->make(true);     
+                ->make(true);       
         } 
 
         $status=\App\Status::select('id','nama_status')->get();
