@@ -20,6 +20,8 @@ Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix'=>'home'],function(){
 	Route::get('/','HomeController@index')->name('home');
+	Route::get('change-password','HomeController@change_password');
+	Route::get('profile','HomeController@profile');
 	Route::get('master','HomeController@master');
 	Route::resource('perilaku-kerja','PerilakukerjaController');
 	Route::resource('sasaran-kerja','SasarankerjaController');
@@ -36,6 +38,7 @@ Route::group(['prefix'=>'home'],function(){
 	Route::get('{id}/preview','NilaiController@preview_skp');
 	Route::get('{id}/export-xls','NilaiController@export_xls');
 	Route::resource('nilai-harian','NilaiharianController');
+	Route::get('{id}/report-harian-belum-konfirmasi','HomeController@report_harian_belum_konfirmasi');
 
 	Route::group(['prefix'=>'report'],function(){
 		Route::get('kegiatan-harian','NilaiharianController@report_kegiatan_harian');
@@ -80,5 +83,9 @@ Route::group(['prefix'=>'home'],function(){
 		Route::post('kegiatan-harian-preview','NilaiharianController@preview_kegiatan_harian');
 		Route::get('export-kegiatan-harian','NilaiharianController@export_kegiatan_harian');
 		Route::post('report-skp-preview','NilaiharianController@report_skp_preview');
+
+		Route::post('reset-password','UserController@reset_password');
+		Route::post('change-password','UserController@change_password');
+		Route::post('approve-kegiatan','HomeController@approve_kegiatan');
 	});
 });

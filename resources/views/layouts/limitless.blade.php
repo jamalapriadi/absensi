@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Pengadilan Negeri Tegal</title>
+	<title>Pengadilan Agama Tegal</title>
 
 	<!-- Global stylesheets -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -90,7 +90,8 @@
 					</a>
 
 					<ul class="dropdown-menu dropdown-menu-right">
-						{{--  <li><a href="{{URL::to('home/profile')}}"><i class="icon-user-plus"></i> My profile</a></li>  --}}
+						<li><a href="{{URL::to('home/profile')}}"><i class="icon-user-plus"></i> My profile</a></li>
+						<li><a href="{{URL::to('home/change-password')}}"><i class="icon-key"></i> Change Password</a></li>
 						<li class="divider"></li>
 						<li>
 							<a href="{{ route('logout') }}"

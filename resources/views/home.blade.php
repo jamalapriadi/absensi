@@ -112,6 +112,60 @@
             </div>
 
             {{$nilai->links()}}
+
+            <hr>
+
+            @if(count($bawahan)>0)
+                <div class="panel panel-flat">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">Ativity Pegawai</h6>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th></th>
+                                    <th>NIP</th>
+                                    <th>Nama</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $no=0;?>
+                                @foreach($bawahan as $row)
+                                    <?php $no++;?>
+                                    <tr>
+                                        <td>{{$no}}</td>
+                                        <td>
+                                            <div class="media-left media-middle">
+                                                {{Html::image('uploads/pegawai/'.$row->foto,'',array('class'=>'img-responsive'))}}
+                                            </div>
+                                        </td>
+                                        <td>{{$row->nip}}</td>
+                                        <td>{{$row->nama_lengkap}}</td>
+                                        <td>
+                                            @if(count($row->harian)>0)
+                                                <span class="badge badge-primary">{{count($row->harian)}}</span>
+                                                <span class="label label-flat border-danger text-danger-600">
+                                                    Report Kegiatan
+                                                </span>
+                                            @else
+                                                <span class="label label-flat border-grey text-grey-600">Tidak Ada Report</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-info btn-sm" href="{{URL::to('home/'.$row->id.'/report-harian-belum-konfirmasi')}}">
+                                                <i class="icon-search4"></i>
+                                            </a>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

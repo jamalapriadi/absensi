@@ -227,11 +227,22 @@ class NilaiharianController extends Controller
     }
 
     public function report_kegiatan_harian(Request $request){
+        $user=\App\User::with('pegawai')->find(\Auth::user()->id);
         $pegawai=\App\Pegawai::select('id','nama_lengkap')->get();
+
+        $bawahan=\App\Pegawai::where('atasan_langsung',$user->pegawai[0]->id)
+                ->with(
+                    [
+                        'harian'=>function($q){
+                            $q->whereNull('approved');
+                        }
+                    ]
+                )->get();
 
         return view('dashboard.nilai.report_kegiatan_harian')
             ->with('title','Report Kegiatan Harian')
             ->with('pegawai',$pegawai)
+            ->with('bawahan',$bawahan)
             ->with('home','Dashboard');
     }
 
@@ -261,13 +272,14 @@ class NilaiharianController extends Controller
             $nilai=\App\Nilaiharian::with('pegawai')
                 ->whereBetween('tanggal',[$start,$end]);
 
-            if(\Auth::user()->level=="pegawai"){
+            $p="";
+            if($request->has('pegawai') && $request->input('pegawai')!=""){
+                $nilai=$nilai->where('pegawai_id',$request->input('pegawai'));
+                $p=$request->input('pegawai');
+            }else{
                 $user=\App\User::with('pegawai')->find(\Auth::user()->id);
                 $nilai=$nilai->where('pegawai_id',$user->pegawai[0]->id);
-            }
-
-            if($request->has('pegawai')){
-                $nilai=$nilai->where('pegawai_id',$request->input('pegawai'));
+                $p=$user->pegawai[0]->id;
             }
 
             $nilai=$nilai->get();
@@ -278,7 +290,8 @@ class NilaiharianController extends Controller
                 'error'=>'',
                 'nilai'=>$nilai,
                 'dari'=>$start,
-                'sampai'=>$end
+                'sampai'=>$end,
+                'pegawai'=>$p
             );
         }
 
@@ -288,13 +301,22 @@ class NilaiharianController extends Controller
     public function export_kegiatan_harian(Request $request){
         $start=date('Y-m-d',strtotime($request->input('dari')));
         $end=date('Y-m-d',strtotime($request->input('sampai')));
+        $p=$request->input('pegawai');
 
         $nilai=\App\Nilaiharian::with('pegawai')
             ->whereBetween('tanggal',[$start,$end]);
 
-        if(\Auth::user()->level=="pegawai"){
-            $user=\App\User::with('pegawai','pegawai.atasan','pegawai.jabatan')->find(\Auth::user()->id);
-            $nilai=$nilai->where('pegawai_id',$user->pegawai[0]->id);
+        if($p!=""){
+            $userpegawai=\DB::table('user_pegawai')
+                ->where('pegawai_id',$p)->first();
+
+            $user=\App\User::with('pegawai','pegawai.atasan','pegawai.jabatan')->find($userpegawai->user_id);
+            $nilai=$nilai->where('pegawai_id',$p);
+        }else{
+            if(\Auth::user()->level=="pegawai"){
+                $user=\App\User::with('pegawai','pegawai.atasan','pegawai.jabatan')->find(\Auth::user()->id);
+                $nilai=$nilai->where('pegawai_id',$user->pegawai[0]->id);
+            }
         }
 
         $nilai=$nilai->get();
@@ -303,7 +325,6 @@ class NilaiharianController extends Controller
             'telp','fax','website','email')
                 ->first();
         
-        if(\Auth::user()->level=="pegawai"){
             return \Excel::create('kegiatan harian',function($excel) use($instansi,$nilai,$user){
                 $excel->sheet('cover',function($sheet) use($nilai,$instansi,$user){
                     $sheet->mergeCells('A1:F1');
@@ -445,8 +466,14 @@ class NilaiharianController extends Controller
 
                     $rownamaatasan=$rowatasan+4;
                     $sheet->cell('A'.$rownamaatasan, function($cell) use($user){
-                        $cell->setValue($user->pegawai[0]->atasan->nama_lengkap)
-                        ->setFontSize(14);
+                        if(count($user->pegawai[0]->atasan)>0){
+                            $cell->setValue($user->pegawai[0]->atasan->nama_lengkap)
+                                ->setFontSize(14);
+                        }else{
+                            $cell->setValue("")
+                                ->setFontSize(14);
+                        }
+                        
                     });
 
                     $sheet->cell('F'.$rownamaatasan, function($cell) use($user){
@@ -456,8 +483,13 @@ class NilaiharianController extends Controller
 
                     $rownipatasan=$rownamaatasan+1;
                     $sheet->cell('A'.$rownipatasan, function($cell) use($user){
-                        $cell->setValue($user->pegawai[0]->atasan->nip)
-                        ->setFontSize(14);
+                        if(count($user->pegawai[0]->atasan)>0){
+                            $cell->setValue($user->pegawai[0]->atasan->nip)
+                                ->setFontSize(14);
+                        }else{
+                            $cell->setValue("")
+                                ->setFontSize(14);
+                        }
                     });
 
                     $sheet->cell('F'.$rownipatasan, function($cell) use($user){
@@ -467,7 +499,6 @@ class NilaiharianController extends Controller
 
                 });
             })->export('xlsx');
-        }
     }
 
 

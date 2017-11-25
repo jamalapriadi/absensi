@@ -25,10 +25,13 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         if ($request->session()->has('sasarankerja')) {
+            $user=\App\User::with('pegawai')->find(\Auth::user()->id);
+
             $value = $request->session()->get('sasarankerja');
             $sasaran=\App\Sasarankerja::find($value);
             $pegawai=\App\Pegawai::all();
             $skp=\App\Nilaiskp::where('sasaran_kerja_id',$value)->get();
+            
             $pengukuran=\App\Tugasjabatan::where('sasaran_kerja_id',$value)
                 ->leftJoin('tugas_jabatan_target as b','b.tugas_jabatan_id','=','tugas_jabatan.id')
                 ->where('b.type','realisasi')
@@ -38,11 +41,19 @@ class HomeController extends Controller
                 'pegawai_id','type_kegiatan','tanggal','dari_jam','sampai_jam','kegiatan',
                 'hasil','keterangan')
                 ->with('pegawai');
-            
+
             if(\Auth::user()->level=="pegawai"){
-                $user=\App\User::with('pegawai')->find(\Auth::user()->id);
                 $nilai=$nilai->where('pegawai_id',$user->pegawai[0]->id);
             }
+
+            $bawahan=\App\Pegawai::where('atasan_langsung',$user->pegawai[0]->id)
+                ->with(
+                    [
+                        'harian'=>function($q){
+                            $q->whereNull('approved');
+                        }
+                    ]
+                )->get();
 
             $nilai=$nilai->paginate(20);
 
@@ -53,7 +64,8 @@ class HomeController extends Controller
                 ->with('pegawai',$pegawai)
                 ->with('skp',$skp)
                 ->with('pengukuran',$pengukuran)
-                ->with('nilai',$nilai);
+                ->with('nilai',$nilai)
+                ->with('bawahan',$bawahan);
         }else{
             $sasaran=\App\Sasarankerja::all();
             return view('sasaran')
@@ -149,5 +161,79 @@ class HomeController extends Controller
         return view('dashboard.report.index')
             ->with('home','Dashboard')
             ->with('title','Report');
+    }
+
+    public function change_password(){
+        return view('dashboard.user.change_password')
+            ->with('home','Dashboard')
+            ->with('title','Change Password');
+    }
+
+    public function profile(){
+        $user=\App\User::with(
+            [
+                'pegawai',
+                'pegawai.atasan',
+                'pegawai.jabatan',
+                'pegawai.status'=>function($q){
+                        $q->where('active','Y');
+                    },
+                'pegawai.status.pangkat',
+                'pegawai.status.kepegawaian',
+                'pegawai.atasan'
+            ]
+        )->find(\Auth::user()->id);
+            
+        return view('dashboard.user.profile')
+            ->with('home','Dashboard')
+            ->with('title','Profile')
+            ->with('user',$user);
+    }
+
+    public function report_harian_belum_konfirmasi(Request $request,$id){
+        $bawahan=\App\Pegawai::with(
+                    [
+                        'harian'=>function($q){
+                            $q->whereNull('approved');
+                        }
+                    ]
+                )->find($id);
+
+        return view('dashboard.pegawai.harian_belum_dikonfirmasi')
+            ->with('home','Dashboard')
+            ->with('title','Kegiatan Harian')
+            ->with('pegawai',$bawahan);
+    }
+
+    public function approve_kegiatan(Request $request){
+        if($request->ajax()){
+            $rules=['kegiatan'=>'required'];
+
+            $pesan=['kegiatan.required'=>'Kegiatan harus diisi'];
+
+            $validasi=\Validator::make($request->all(),$rules,$pesan);
+
+            if($validasi->fails()){
+                $data=array(
+                    'success'=>false,
+                    'pesan'=>'Validasi Error',
+                    'error'=>$validasi->errors()->all()
+                );
+            }else{
+                $nilai=\App\Nilaiharian::find($request->input('kegiatan'));
+
+                $nilai->approved='Y';
+                $nilai->approved_by=\Auth::user()->id;
+                $nilai->save();
+
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Data Berhasil diupdate',
+                    'error'=>''
+                );
+            }
+
+            return $data;
+        }
     }
 }

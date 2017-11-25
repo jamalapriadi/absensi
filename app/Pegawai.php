@@ -42,6 +42,10 @@ class Pegawai extends Model
         return $this->hasMany('App\Tugasjabatan','pegawai_id');
     }
 
+    public function harian(){
+        return $this->hasMany('App\Nilaiharian');
+    }
+
     public function nilai(){
         return $this->hasOne('\App\Nilaiskp');
     }

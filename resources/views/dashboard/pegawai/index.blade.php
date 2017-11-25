@@ -110,7 +110,7 @@
                         {data: 'nama_lengkap', name: 'nama_lengkap',title:'Nama Lengkap',defaultContent: "-"},
                         {data: 'pangkats', name: 'pangkats',title:'Pangkat',defaultContent: "-"},
                         {data: 'jabatans', name: 'jabatans',title:'Jabatan',defaultContent: "-"},
-                        //{data: 'tempat_lahir', name: 'tempat_lahir',title:'Tempat Lahir'},
+                        {data: 'atasan.nama_lengkap', name: 'atasan.nama_lengkap',title:'Atasan Langsung',defaultContent: "-"},
                         //{data: 'tanggal_lahir', name: 'tanggal_lahir',title:'Tanggal Lahir'},
                         //{data: 'agama', name: 'agama',title:'Agama'},
                         //{data: 'alamat', name: 'alamat',title:'Alamat'},
