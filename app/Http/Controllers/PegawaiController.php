@@ -13,6 +13,13 @@ class PegawaiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+
     public function index(Request $request,DataTables $dataTables)
     {
         if($request->ajax()){
@@ -133,7 +140,18 @@ class PegawaiController extends Controller
      */
     public function store(Request $request)
     {
-        $validasi=\Validator::make($request->all(),Pegawai::$rules,Pegawai::$pesan);
+        $rules=[
+            'nama'=>'required',
+            'nip'=>'required|unique:pegawai'
+        ];
+
+        $pesan=[
+            'nama.required'=>'Nama harus diisi',
+            'nip.required'=>'Nip Harus diisi',
+            'nip.unique'=>'Nip Sudah ada'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules,$pesan);
 
         if($validasi->fails()){
             $data=array(
