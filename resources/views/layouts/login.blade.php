@@ -21,7 +21,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>Pengadilan Negeri Tegal</title>
+  <title>Pengadilan Agama Tegal</title>
 
   <!-- Icons -->
   {{Html::style('core/node_modules/font-awesome/css/font-awesome.min.css')}}
