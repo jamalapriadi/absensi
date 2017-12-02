@@ -232,6 +232,7 @@ class JabatanController extends Controller
         \DB::statement(\DB::raw('set @rownum=0'));
 
         $target=\App\Targetjabatan::where('tugas_jabatan_id',$id)
+            ->where('type','target')
             ->select(\DB::raw('@rownum  := @rownum  + 1 AS no'),'id','tugas_jabatan_id','kuant','output',
             'kual','waktu','periode_waktu','biaya');
         
