@@ -40,7 +40,7 @@ class NilaiharianController extends Controller
                     $html.="</div>";
                     return $html;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','keterangan'])
                 ->make(true);	
         }
 
@@ -438,7 +438,7 @@ class NilaiharianController extends Controller
                         });
 
                         $sheet->cell('F'.$rowsekarang, function($cell) use($pr){
-                            $cell->setValue($pr->keterangan)
+                            $cell->setValue(strip_tags($pr->keterangan))
                             ->setFontSize(14);
                         });
 

@@ -103,7 +103,7 @@
                                     {{$row->hasil}}
                                 </td>
                                 <td>
-                                    {{$row->keterangan}}
+                                    {{strip_tags($row->keterangan)}}
                                 </td>
                             </tr>
                         @endforeach
