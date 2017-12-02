@@ -350,25 +350,46 @@ class PegawaiController extends Controller
 
             if($simpan){
                 if($request->has('pangkat')){
-                    $pangkat=\App\Pangkatpegawai::where('pegawai_id',$id)
-                        ->where('active','Y')
-                        ->update(
-                            [
-                                'pangkat_id'=>$request->input('pangkat'),
-                                'tmt'=>date('Y-m-d',strtotime($request->input('tmtpangkat')))
-                            ]
-                        );
+                    $cekpangkat=$pangkat=\App\Pangkatpegawai::where('pegawai_id',$id)->get();
+
+                    if(count($cekpangkat)>0){
+                        $pangkat=\App\Pangkatpegawai::where('pegawai_id',$id)
+                            ->where('active','Y')
+                            ->update(
+                                [
+                                    'pangkat_id'=>$request->input('pangkat'),
+                                    'tmt'=>date('Y-m-d',strtotime($request->input('tmtpangkat')))
+                                ]
+                            );
+                    }else{
+                        $pangkat=new \App\Pangkatpegawai;
+                        $pangkat->pegawai_id=$id;
+                        $pangkat->pangkat_id=$request->input('pangkat');
+                        $pangkat->tmt=date('Y-m-d',strtotime($request->input('tmtpangkat')));
+                        $pangkat->active='Y';
+                        $pangkat->save();
+                    }
                 }
 
                 if($request->has('jabatan')){
-                    $jabatan=\App\Jabatanpegawai::where('pegawai_id',$id)
-                        ->where('active','Y')
-                        ->update(
-                            [
-                                'jabatan_id'=>$request->input('jabatan'),
-                                'tmt'=>date('Y-m-d',strtotime($request->input('tmtjabatan')))
-                            ]
-                        );
+                    $cekjabatan=\App\Jabatanpegawai::where('pegawai_id',$id)->get();
+                    if(count($cekjabatan)>0){
+                        $jabatan=\App\Jabatanpegawai::where('pegawai_id',$id)
+                            ->where('active','Y')
+                            ->update(
+                                [
+                                    'jabatan_id'=>$request->input('jabatan'),
+                                    'tmt'=>date('Y-m-d',strtotime($request->input('tmtjabatan')))
+                                ]
+                            );
+                    }else{
+                        $jabatan=new \App\Jabatanpegawai;
+                        $jabatan->pegawai_id=$id;
+                        $jabatan->jabatan_id=$request->input('jabatan');
+                        $jabatan->tmt=date('Y-m-d',strtotime($request->input('tmtjabatan')));
+                        $jabatan->active='Y';
+                        $jabatan->save();
+                    }
                 }
 
                 $data=array(

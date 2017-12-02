@@ -85,12 +85,16 @@
                                 </td>
                                 <td>
                                     <div class="media-left media-middle">
-                                        {{Html::image('uploads/pegawai/'.$row->pegawai->foto,'',array('class'=>'img-responsive'))}}
+                                        @if(count($row->pegawai)>0)
+                                            {{Html::image('uploads/pegawai/'.$row->pegawai->foto,'',array('class'=>'img-responsive'))}}
+                                        @endif
                                     </div>
 
                                     <div class="media-body">
                                         <a href="#" class="display-inline-block text-default text-semibold letter-icon-title">{{$row->pegawai->nama_lengkap}}</a>
-                                        <div class="text-muted text-size-small">{{$row->pegawai->jabatan[0]->nama_jabatan}}</div>
+                                        @if(count($row->pegawai->jabatan)>0)
+                                            <div class="text-muted text-size-small">{{$row->pegawai->jabatan[0]->nama_jabatan}}</div>
+                                        @endif
                                     </div>
                                 </td>
                                 <td>

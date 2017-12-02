@@ -353,8 +353,13 @@ class NilaiharianController extends Controller
                     });
 
                     $sheet->cell('C4', function($cell) use($user){
-                        $cell->setValue($user->pegawai[0]->nama_lengkap)
-                        ->setFontSize(14);
+                        if(count($user->pegawai)>0){
+                            $cell->setValue($user->pegawai[0]->nama_lengkap)
+                                ->setFontSize(14);
+                        }else{
+                            $cell->setValue('Nama Pegawai tidak ada')
+                            ->setFontSize(14);
+                        }
                     });
 
                     $sheet->cell('A5', function($cell){
@@ -368,8 +373,13 @@ class NilaiharianController extends Controller
                     });
 
                     $sheet->cell('C5', function($cell) use($user){
-                        $cell->setValue($user->pegawai[0]->jabatan[0]->nama_jabatan)
-                        ->setFontSize(14);
+                        if(count($user->pegawai[0]->jabatan)>0){
+                            $cell->setValue($user->pegawai[0]->jabatan[0]->nama_jabatan)
+                                ->setFontSize(14);
+                        }else{
+                            $cell->setValue('Jabatan tidak ada')
+                                ->SetFontSize(14);
+                        }
                     });
 
                     /*=== HEADING TABEL ====== */

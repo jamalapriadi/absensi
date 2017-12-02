@@ -123,37 +123,77 @@
                     </div>
                 </div>
             @endforeach
-        @endif
-
-        @if(count($pegawai->jabatan)>0)
-            @foreach($pegawai->jabatan as $j)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h6 class="panel-title">Jabatan</h6>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label for="" class="col-lg-2 control-label">Jabatan</label>
-                            <div class="col-lg-8">
-                                <select name="jabatan" id="jabatan" class="form-control">
-                                    <option value="">--Pilih Jabatan--</option>
-                                    @foreach($jabatan as $row)
-                                        <option value="{{$row->id}}" @if($j->id==$row->id) selected='selected' @endif>{{$row->nama_jabatan}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+        @else
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Pangkat</h6>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="" class="col-lg-2 control-label">Status Pegawai</label>
+                        <div class="col-lg-8">
+                            <select name="status" id="status" class="form-control">
+                                <option value="">--Pilih Status--</option>
+                                @foreach($status as $row)
+                                    <option value="{{$row->id}}">{{$row->nama_status}}</option>
+                                @endforeach
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="" class="col-lg-2 control-label">TMT</label>
-                            <div class="col-lg-8">
-                                <input type="text" name="tmtjabatan" class="form-control pickadate-year" value="{{$j->pivot->tmt}}">
-                            </div>
+                    <div class="form-group">
+                        <label for="" class="col-lg-2 control-label">Pangkat</label>
+                        <div class="col-lg-8">
+                            <select name="pangkat" id="pangkat" class="form-control">
+                                <option value="">--Pilih Pangkat--</option>
+                                @foreach($pangkat as $row)
+                                    <option value="{{$row->id}}">{{$row->nama_pangkat}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">TMT</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control pickadate-year" name="tmtpangkat">
                         </div>
                     </div>
                 </div>
-            @endforeach
+            </div>
         @endif
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="panel-title">Jabatan</h6>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">Jabatan</label>
+                    <div class="col-lg-8">
+                        <select name="jabatan" id="jabatan" class="form-control">
+                            <option value="">--Pilih Jabatan--</option>
+                            @if(count($pegawai->jabatan)>0){
+                                <?php $jab=$pegawai->jabatan[0]->nama_jabatan;?>
+                            @else
+                                <?php $jab="";?>
+                            @endif
+
+                            @foreach($jabatan as $row)
+                                <option value="{{$row->id}}" @if($jab==$row->id) selected='selected' @endif>{{$row->nama_jabatan}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="col-lg-2 control-label">TMT</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="tmtjabatan" class="form-control pickadate-year">
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -202,6 +242,12 @@
             $('.daterange-single').daterangepicker({ 
                 singleDatePicker: true,
                 dateFormat: 'dd/mm/yyyy'
+            });
+
+            $('.pickadate-year').pickadate({
+                selectYears: true,
+                selectMonths: true,
+                selectYears: 4
             });
 
             // $(document).on("change","#filepackage",function(objEvent){

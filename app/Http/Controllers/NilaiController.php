@@ -633,8 +633,13 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('F20', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai->pangkat)>0){
+                        $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat)
+                            ->setFontSize(12);
+                    }else{
+                        $cell->setValue('Pangkat Belum Ada')
+                            ->setFontSize(12);
+                    }
                 });
 
                 $sheet->cell('B21', function($cell) {
@@ -648,8 +653,13 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('F21', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai->jabatan)>0){
+                        $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan)
+                            ->setFontSize(12);
+                    }else{
+                        $cell->setValue('Jabatan Belum Ada')
+                        ->setFontSize(12);
+                    }
                 });
 
                 $sheet->cell('B22', function($cell) {
@@ -798,7 +808,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E9', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat);
+                    if(count($nilai->pegawai->pangkat)>0){
+                        $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat);
+                    }else{
+                        $cell->setValue('Pangkat belum ada');
+                    }
                 });
 
                 $sheet->cell('B10', function($cell) {
@@ -814,7 +828,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E10', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan);
+                    if(count($nilai->pegawai->jabatan)>0){
+                        $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan);
+                    }else{
+                        $cell->setValue('Jabatan belum ada');
+                    }
                 });
 
                 $sheet->cell('B11', function($cell) {
@@ -857,7 +875,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E13', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->nama_lengkap);
+                    }else{
+                        $cell->setValue('Penilai tidak ada');
+                    }
                 });
 
                 $sheet->cell('B14', function($cell) {
@@ -873,7 +895,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E14', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->nip);
+                    }else{
+                        $cell->setValue('Penilai tidak ada');
+                    }
                 });
 
                 $sheet->cell('B15', function($cell) {
@@ -889,7 +915,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E15', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat);
+                    if(count($nilai->penilai->pangkat)>0){
+                        $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat);
+                    }else{
+                        $cell->setValue('Penilai belum ada');
+                    }
                 });
 
                 $sheet->cell('B16', function($cell) {
@@ -905,7 +935,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E16', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan);
+                    if(count($nilai->penilai->jabatan)>0){
+                        $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan);
+                    }else{
+                        $cell->setValue('Jabatan belum ada');
+                    }
                 });
 
                 $sheet->cell('B17', function($cell) {
@@ -949,7 +983,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E19', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->nama_lengkap);
+                    if(count($nilai->atasan)>0){
+                        $cell->setValue($nilai->atasan->nama_lengkap);
+                    }else{
+                        $cell->setValue('Atasan tidak ada');
+                    }
                 });
 
                 $sheet->cell('B20', function($cell) {
@@ -965,7 +1003,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E20', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->nip);
+                    if(count($nilai->atasan)>0){
+                        $cell->setValue($nilai->atasan->nip);
+                    }else{
+                        $cell->setValue('Atasan tidak ada');
+                    }
                 });
 
                 $sheet->cell('B21', function($cell) {
@@ -981,7 +1023,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E21', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->pangkat[0]->nama_pangkat);
+                    if(count($nilai->atasan->pangkat)>0){
+                        $cell->setValue($nilai->atasan->pangkat[0]->nama_pangkat);
+                    }else{
+                        $cell->setValue('Pangkat atasan tidak ada');
+                    }
                 });
 
                 $sheet->cell('B22', function($cell) {
@@ -997,7 +1043,11 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E22', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->jabatan[0]->nama_jabatan);
+                    if(count($nilai->atasan->jabatan)>0){
+                        $cell->setValue($nilai->atasan->jabatan[0]->nama_jabatan);
+                    }else{
+                        $cell->setValue('Jabatan atasan tidak ada');
+                    }
                 });
 
                 $sheet->cell('B23', function($cell) {
@@ -1076,32 +1126,52 @@ class NilaiController extends Controller
                     ->setFontSize(12);
                 });
                 $sheet->cell('C4', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap)
-                    ->setFontSize(12);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->nama_lengkap)
+                            ->setFontSize(12);
+                    }else{
+                        $cell->setValue('Penilai tidak ada')
+                            ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('B5', function($cell) {
                     $cell->setValue('NIP')
                     ->setFontSize(12);
                 });
                 $sheet->cell('C5', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip)
-                    ->setFontSize(12);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->nip)
+                            ->setFontSize(12);
+                    }else{
+                        $cell->setValue('Penilai tidak ada')
+                        ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('B6', function($cell) {
                     $cell->setValue('Pangkat / Gol. Ruang')
                     ->setFontSize(12);
                 });
                 $sheet->cell('C6', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat)
-                    ->setFontSize(12);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat)
+                            ->setFontSize(12);
+                    }else{
+                        $cell->setValue('Pangkat penilai tidak ada')
+                        ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('B7', function($cell) {
                     $cell->setValue('Jabatan')
                     ->setFontSize(12);
                 });
                 $sheet->cell('C7', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan)
-                    ->setFontSize(12);
+                    if(count($nilai->penilai->jabatan)>0){
+                        $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan)
+                            ->setFontSize(12);
+                    }else{
+                        $cell->setValue('Jabatan penilai tidak ada')
+                        ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('B8', function($cell) {
                     $cell->setValue('Unit Kerja')
@@ -1154,32 +1224,40 @@ class NilaiController extends Controller
                     ->setFontSize(12);
                 });
                 $sheet->cell('G4', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nama_lengkap)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->nama_lengkap)
+                            ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('F5', function($cell) {
                     $cell->setValue('NIP')
                     ->setFontSize(12);
                 });
                 $sheet->cell('G5', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nip)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->nip)
+                        ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('F6', function($cell) {
                     $cell->setValue('Pangkat / Gol. Ruang')
                     ->setFontSize(12);
                 });
                 $sheet->cell('G6', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat)
+                        ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('F7', function($cell) {
                     $cell->setValue('Jabatan')
                     ->setFontSize(12);
                 });
                 $sheet->cell('G7', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan)
+                        ->setFontSize(12);
+                    }
                 });
                 $sheet->cell('F8', function($cell) {
                     $cell->setValue('Unit Kerja')
@@ -1233,114 +1311,114 @@ class NilaiController extends Controller
                 $no=11;
                 $nos=1;
                 $jumtugas=count($nilai->pegawai->tugas);
-                foreach($nilai->pegawai->tugas as $row){
-                    $sheet->cell('A'.$no, function($cell) use($nos){
-                        $cell->setValue($nos)
-                        ->setFontSize(12);
+                if(count($nilai->pegawai->tugas)>0){
+                    foreach($nilai->pegawai->tugas as $row){
+                        $sheet->cell('A'.$no, function($cell) use($nos){
+                            $cell->setValue($nos)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('B'.$no, function($cell) use($row){
+                            $cell->setValue($row->nama_tugas)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('E'.$no, function($cell) use($row){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('F'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->kuant." ".$row->target[0]->output)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+                        $sheet->cell('H'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->kual)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+                        $sheet->cell('I'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->waktu." ".$row->target[0]->periode_waktu)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+                        $sheet->cell('K'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->biaya)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+                        $no++;
+                        $nos++;
+                    }
+    
+                    $sheet->mergeCells('A'.$no.':C'.$no);
+                    $sheet->cell('A'.$no, function($cell){
+                        $cell->setValue('Jumlah')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
                     });
-
-                    $sheet->cell('B'.$no, function($cell) use($row){
-                        $cell->setValue($row->nama_tugas)
-                        ->setFontSize(12);
-                    });
-
-                    $sheet->cell('E'.$no, function($cell) use($row){
+    
+                    $sheet->mergeCells('F'.$no.':K'.$no);
+                    $sheet->cell('F'.$no, function($cell){
                         $cell->setValue('')
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('F'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->kuant." ".$row->target[0]->output)
+    
+                    $nok=$no+1;
+                    $sheet->mergeCells('G'.$nok.':K'.$nok);
+                    $sheet->cell('G'.$nok, function($cell) use($nilai){
+                        $cell->setValue('Tegal, '.date('d F Y',strtotime($nilai->tgl_penilaian)))
                         ->setFontSize(12)
                         ->setAlignment('center');
                     });
-                    $sheet->cell('H'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->kual)
+    
+                    $nol=$nok+1;
+                    $sheet->mergeCells('A'.$nol.':C'.$nol);
+                    $sheet->cell('A'.$nol, function($cell){
+                        $cell->setValue('Pejabat Penilai, ')
                         ->setFontSize(12)
                         ->setAlignment('center');
                     });
-                    $sheet->cell('I'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->waktu." ".$row->target[0]->periode_waktu)
+    
+                    $sheet->mergeCells('G'.$nol.':K'.$nol);
+                    $sheet->cell('G'.$nol, function($cell){
+                        $cell->setValue('Pegawai Negeri Sipil Yang Dinilai,')
                         ->setFontSize(12)
                         ->setAlignment('center');
                     });
-                    $sheet->cell('K'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->biaya)
+    
+                    $nom=$nok+5;
+                    $sheet->mergeCells('A'.$nom.':C'.$nom);
+                    $sheet->cell('A'.$nom, function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->nama_lengkap)
                         ->setFontSize(12)
                         ->setAlignment('center');
                     });
-
-                    $no++;
-                    $nos++;
+    
+                    $sheet->mergeCells('G'.$nom.':K'.$nom);
+                    $sheet->cell('G'.$nom, function($cell) use($nilai){
+                        $cell->setValue($nilai->pegawai->nama_lengkap)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $non=$nok+6;
+                    $sheet->mergeCells('A'.$non.':C'.$non);
+                    $sheet->cell('A'.$non, function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->nip)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $sheet->mergeCells('G'.$non.':K'.$non);
+                    $sheet->cell('G'.$non, function($cell) use($nilai){
+                        $cell->setValue($nilai->pegawai->nip)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
                 }
-
-                $sheet->mergeCells('A'.$no.':C'.$no);
-                $sheet->cell('A'.$no, function($cell){
-                    $cell->setValue('Jumlah')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->mergeCells('F'.$no.':K'.$no);
-                $sheet->cell('F'.$no, function($cell){
-                    $cell->setValue('')
-                    ->setFontSize(12);
-                });
-
-                $nok=$no+1;
-                $sheet->mergeCells('G'.$nok.':K'.$nok);
-                $sheet->cell('G'.$nok, function($cell) use($nilai){
-                    $cell->setValue('Tegal, '.date('d F Y',strtotime($nilai->tgl_penilaian)))
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $nol=$nok+1;
-                $sheet->mergeCells('A'.$nol.':C'.$nol);
-                $sheet->cell('A'.$nol, function($cell){
-                    $cell->setValue('Pejabat Penilai, ')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->mergeCells('G'.$nol.':K'.$nol);
-                $sheet->cell('G'.$nol, function($cell){
-                    $cell->setValue('Pegawai Negeri Sipil Yang Dinilai,')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $nom=$nok+5;
-                $sheet->mergeCells('A'.$nom.':C'.$nom);
-                $sheet->cell('A'.$nom, function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->mergeCells('G'.$nom.':K'.$nom);
-                $sheet->cell('G'.$nom, function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $non=$nok+6;
-                $sheet->mergeCells('A'.$non.':C'.$non);
-                $sheet->cell('A'.$non, function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->mergeCells('G'.$non.':K'.$non);
-                $sheet->cell('G'.$non, function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-                
-
                 
             });
 
@@ -1402,13 +1480,17 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('K3', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nama_lengkap)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->nama_lengkap)
+                            ->setFontSize(12);
+                    }
                 });
 
                 $sheet->cell('K4', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nip)
-                    ->setFontSize(12);
+                    if(count($nilai->pegawai)){
+                        $cell->setValue($nilai->pegawai->nip)
+                            ->setFontSize(12);
+                    }
                 });
 
                 /*==============HEADER TABEL ================*/
@@ -1599,322 +1681,346 @@ class NilaiController extends Controller
                 $no=8;
                 $nos=1;
                 $jumtugas=count($nilai->pegawai->tugas);
-                foreach($nilai->pegawai->tugas as $row){
-                    $sheet->cell('A'.$no, function($cell) use($nos){
-                        $cell->setValue($nos)
-                        ->setFontSize(12);
+                if(count($nilai->pegawai->tugas)>0){
+                    foreach($nilai->pegawai->tugas as $row){
+                        $sheet->cell('A'.$no, function($cell) use($nos){
+                            $cell->setValue($nos)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('B'.$no, function($cell) use($row){
+                            $cell->setValue($row->nama_tugas)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('C'.$no, function($cell) use($row){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('D'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->kuant)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+                        $sheet->cell('E'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->output)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+                        $sheet->cell('F'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->kual)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+                        $sheet->cell('G'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->waktu)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+                        $sheet->cell('H'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->periode_waktu)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+                        $sheet->cell('I'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->biaya)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+    
+    
+                        $sheet->cell('K'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->kuant)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('L'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->output)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('M'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->kual)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('N'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->waktu)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('O'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->periode_waktu)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('P'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->biaya)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('Q'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->perhitungan)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $sheet->cell('R'.$no, function($cell) use($row){
+                            if(count($row->realisasi)>0){
+                                $cell->setValue($row->realisasi[0]->nilai_pencapaian)
+                                ->setFontSize(12)
+                                ->setAlignment('center');
+                            }
+                        });
+    
+                        $no++;
+                        $nos++;
+                    }
+    
+                    $sheet->mergeCells('A'.$no.':B'.$no);
+                    $sheet->cell('A'.$no, function($cell){
+                        $cell->setValue('Jumlah')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
                     });
-
-                    $sheet->cell('B'.$no, function($cell) use($row){
-                        $cell->setValue($row->nama_tugas)
-                        ->setFontSize(12);
+    
+                    $sheet->cell('C'.$no, function($cell){
+                        $cell->setValue('0')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
                     });
-
-                    $sheet->cell('C'.$no, function($cell) use($row){
+    
+                    $sheet->mergeCells('D'.$no.':I'.$no);
+                    $sheet->cell('D'.$no, function($cell){
                         $cell->setValue('')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $sheet->cell('J'.$no, function($cell){
+                        $cell->setValue('0')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $sheet->mergeCells('K'.$no.':Q'.$no);
+                    $sheet->cell('K'.$no, function($cell){
+                        $cell->setValue('')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $sheet->cell('R'.$no, function($cell){
+                        $cell->setValue('')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $nok=$no+1;
+                    $sheet->mergeCells('B'.$nok.':R'.$nok);
+                    $sheet->cell('B'.$nok, function($cell){
+                        $cell->setValue('II. TUGAS TAMBAHAN DAN KREATIVITAS :')
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('D'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->kuant)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('E'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->output)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('F'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->kual)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('G'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->waktu)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('H'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->periode_waktu)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('I'.$no, function($cell) use($row){
-                        $cell->setValue($row->target[0]->biaya)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-
-                    $sheet->cell('K'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->kuant)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('L'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->output)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('M'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->kual)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('N'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->waktu)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('O'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->periode_waktu)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('P'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->biaya)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('Q'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->perhitungan)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $sheet->cell('R'.$no, function($cell) use($row){
-                        $cell->setValue($row->realisasi[0]->nilai_pencapaian)
-                        ->setFontSize(12)
-                        ->setAlignment('center');
-                    });
-
-                    $no++;
-                    $nos++;
-                }
-
-                $sheet->mergeCells('A'.$no.':B'.$no);
-                $sheet->cell('A'.$no, function($cell){
-                    $cell->setValue('Jumlah')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->cell('C'.$no, function($cell){
-                    $cell->setValue('0')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->mergeCells('D'.$no.':I'.$no);
-                $sheet->cell('D'.$no, function($cell){
-                    $cell->setValue('')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->cell('J'.$no, function($cell){
-                    $cell->setValue('0')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->mergeCells('K'.$no.':Q'.$no);
-                $sheet->cell('K'.$no, function($cell){
-                    $cell->setValue('')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->cell('R'.$no, function($cell){
-                    $cell->setValue('')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $nok=$no+1;
-                $sheet->mergeCells('B'.$nok.':R'.$nok);
-                $sheet->cell('B'.$nok, function($cell){
-                    $cell->setValue('II. TUGAS TAMBAHAN DAN KREATIVITAS :')
-                    ->setFontSize(12);
-                });
-
-                $not=$nok+1;
-                $notam=1;
-                if(count($nilai->tambahan)>0){
-                    foreach($nilai->tambahan as $p){
+    
+                    $not=$nok+1;
+                    $notam=1;
+                    if(count($nilai->tambahan)>0){
+                        foreach($nilai->tambahan as $p){
+                            $sheet->cell('A'.$not, function($cell) use($notam){
+                                $cell->setValue($notam)
+                                ->setFontSize(12);
+                            });
+    
+                            $sheet->cell('B'.$not, function($cell) use($p){
+                                $cell->setValue($p->nama)
+                                ->setFontSize(12);
+                            });                        
+    
+                            $sheet->mergeCells('C'.$not.':Q'.$not);
+    
+                            $sheet->cell('R'.$not, function($cell) use($p){
+                                $cell->setValue($p->nilai)
+                                ->setFontSize(12);
+                            });
+    
+                            $notam++;
+                            $not++;
+                        }
+                    }else{
                         $sheet->cell('A'.$not, function($cell) use($notam){
                             $cell->setValue($notam)
                             ->setFontSize(12);
                         });
-
-                        $sheet->cell('B'.$not, function($cell) use($p){
-                            $cell->setValue($p->nama)
+    
+                        $sheet->cell('B'.$not, function($cell){
+                            $cell->setValue('tugas tambahan')
                             ->setFontSize(12);
                         });                        
-
+    
                         $sheet->mergeCells('C'.$not.':Q'.$not);
-
-                        $sheet->cell('R'.$not, function($cell) use($p){
-                            $cell->setValue($p->nilai)
+    
+                        $sheet->cell('R'.$not, function($cell){
+                            $cell->setValue('')
                             ->setFontSize(12);
                         });
-
-                        $notam++;
-                        $not++;
+    
+                        $not=$not+1;
+                        $sheet->cell('A'.$not, function($cell) use($notam){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('B'.$not, function($cell){
+                            $cell->setValue('tugas tambahan')
+                            ->setFontSize(12);
+                        });                        
+    
+                        $sheet->mergeCells('C'.$not.':Q'.$not);
+    
+                        $sheet->cell('R'.$not, function($cell){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
+    
+                        $not=$not+1;
+                        $sheet->cell('A'.$not, function($cell) use($notam){
+                            $cell->setValue('2')
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('B'.$not, function($cell){
+                            $cell->setValue('kreativitas')
+                            ->setFontSize(12);
+                        });                        
+    
+                        $sheet->mergeCells('C'.$not.':Q'.$not);
+    
+                        $sheet->cell('R'.$not, function($cell){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
+    
+                        $not=$not+1;
+                        $sheet->cell('A'.$not, function($cell) use($notam){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('B'.$not, function($cell){
+                            $cell->setValue('kreativitas')
+                            ->setFontSize(12);
+                        });                        
+    
+                        $sheet->mergeCells('C'.$not.':Q'.$not);
+    
+                        $sheet->cell('R'.$not, function($cell){
+                            $cell->setValue('')
+                            ->setFontSize(12);
+                        });
                     }
-                }else{
-                    $sheet->cell('A'.$not, function($cell) use($notam){
-                        $cell->setValue($notam)
+    
+                    $nok=$not+3;
+                    $nom=$nok+1;
+    
+                    
+                    $sheet->mergeCells('A'.$nok.':Q'.$nok);
+                    //$sheet->mergeCells('A'.$nok.':A'.$nom);
+                    
+                    $sheet->cell('A'.$nok, function($cell){
+                        $cell->setValue('Nilai Capaian SKP')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });                    
+    
+                    $sheet->cell('R'.$nok, function($cell) use($nilai){
+                        $cell->setValue($nilai->nilai_pencapaian)
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('B'.$not, function($cell){
-                        $cell->setValue('tugas tambahan')
-                        ->setFontSize(12);
-                    });                        
-
-                    $sheet->mergeCells('C'.$not.':Q'.$not);
-
-                    $sheet->cell('R'.$not, function($cell){
-                        $cell->setValue('')
-                        ->setFontSize(12);
+    
+                    $sheet->cell('R'.$nom, function($cell) use($nilai){
+                        $status="";
+                        if($nilai->nilai_pencapaian<100 && $nilai->nilai_pencapaian>=90){
+                            $status="Sangat Baik";
+                        }else if($nilai->nilai_pencapaian<90 && $nilai->nilai_pencapaian>=80){
+                            $status="Baik";
+                        }else if($nilai->nilai_pencapaian<80 && $nilai->nilai_pencapaian>=70){
+                            $status="Cukup Baik";
+                        }else if($nilai->nilai_pencapaian<70 && $nilai->nilai_pencapaian>=60){
+                            $status="Cukup";
+                        }else{
+                            $status="Kurang";
+                        }
+    
+                        $cell->setValue($status)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
                     });
-
-                    $not=$not+1;
-                    $sheet->cell('A'.$not, function($cell) use($notam){
-                        $cell->setValue('')
-                        ->setFontSize(12);
+    
+                    $non=$nom+1;
+                    $sheet->mergeCells('M'.$non.':R'.$non);
+                    $sheet->cell('M'.$non, function($cell) use($nilai){
+                        $cell->setValue('Tegal, '.date('d F Y',strtotime($nilai->tgl_penilaian)))
+                        ->setFontSize(12)
+                        ->setAlignment('center');
                     });
-
-                    $sheet->cell('B'.$not, function($cell){
-                        $cell->setValue('tugas tambahan')
-                        ->setFontSize(12);
-                    });                        
-
-                    $sheet->mergeCells('C'.$not.':Q'.$not);
-
-                    $sheet->cell('R'.$not, function($cell){
-                        $cell->setValue('')
-                        ->setFontSize(12);
+    
+                    $nol=$non+1;
+                    $sheet->mergeCells('M'.$nol.':R'.$nol);
+                    $sheet->cell('M'.$nol, function($cell) use($nilai){
+                        $cell->setValue('Pejabat Penilai, ')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
                     });
-
-                    $not=$not+1;
-                    $sheet->cell('A'.$not, function($cell) use($notam){
-                        $cell->setValue('2')
-                        ->setFontSize(12);
+    
+                    $noo=$nol+4;
+                    $sheet->mergeCells('M'.$noo.':R'.$noo);
+                    $sheet->cell('M'.$noo, function($cell) use($nilai){
+                        if(count($nilai->penilai)>0){
+                            $cell->setValue($nilai->penilai->nama_lengkap)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        }
                     });
-
-                    $sheet->cell('B'.$not, function($cell){
-                        $cell->setValue('kreativitas')
-                        ->setFontSize(12);
-                    });                        
-
-                    $sheet->mergeCells('C'.$not.':Q'.$not);
-
-                    $sheet->cell('R'.$not, function($cell){
-                        $cell->setValue('')
-                        ->setFontSize(12);
-                    });
-
-                    $not=$not+1;
-                    $sheet->cell('A'.$not, function($cell) use($notam){
-                        $cell->setValue('')
-                        ->setFontSize(12);
-                    });
-
-                    $sheet->cell('B'.$not, function($cell){
-                        $cell->setValue('kreativitas')
-                        ->setFontSize(12);
-                    });                        
-
-                    $sheet->mergeCells('C'.$not.':Q'.$not);
-
-                    $sheet->cell('R'.$not, function($cell){
-                        $cell->setValue('')
-                        ->setFontSize(12);
+    
+                    $nop=$noo+1;
+                    $sheet->mergeCells('M'.$nop.':R'.$nop);
+                    $sheet->cell('M'.$nop, function($cell) use($nilai){
+                        if(count($nilai->penilai)>0){
+                            $cell->setValue($nilai->penilai->nip)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        }
+                        
                     });
                 }
-
-                $nok=$not+3;
-                $nom=$nok+1;
-
                 
-                $sheet->mergeCells('A'.$nok.':Q'.$nok);
-                //$sheet->mergeCells('A'.$nok.':A'.$nom);
-                
-                $sheet->cell('A'.$nok, function($cell){
-                    $cell->setValue('Nilai Capaian SKP')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });                    
-
-                $sheet->cell('R'.$nok, function($cell) use($nilai){
-                    $cell->setValue($nilai->nilai_pencapaian)
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('R'.$nom, function($cell) use($nilai){
-                    $status="";
-                    if($nilai->nilai_pencapaian<100 && $nilai->nilai_pencapaian>=90){
-                        $status="Sangat Baik";
-                    }else if($nilai->nilai_pencapaian<90 && $nilai->nilai_pencapaian>=80){
-                        $status="Baik";
-                    }else if($nilai->nilai_pencapaian<80 && $nilai->nilai_pencapaian>=70){
-                        $status="Cukup Baik";
-                    }else if($nilai->nilai_pencapaian<70 && $nilai->nilai_pencapaian>=60){
-                        $status="Cukup";
-                    }else{
-                        $status="Kurang";
-                    }
-
-                    $cell->setValue($status)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $non=$nom+1;
-                $sheet->mergeCells('M'.$non.':R'.$non);
-                $sheet->cell('M'.$non, function($cell) use($nilai){
-                    $cell->setValue('Tegal, '.date('d F Y',strtotime($nilai->tgl_penilaian)))
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $nol=$non+1;
-                $sheet->mergeCells('M'.$nol.':R'.$nol);
-                $sheet->cell('M'.$nol, function($cell) use($nilai){
-                    $cell->setValue('Pejabat Penilai, ')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $noo=$nol+4;
-                $sheet->mergeCells('M'.$noo.':R'.$noo);
-                $sheet->cell('M'.$noo, function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $nop=$noo+1;
-                $sheet->mergeCells('M'.$nop.':R'.$nop);
-                $sheet->cell('M'.$nop, function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
                 /*============= END KEGIATAN / REALISASI ======*/
             });
 
@@ -2039,113 +2145,115 @@ class NilaiController extends Controller
 
                 $no=12;
                 $total=0;
-                foreach($nilai->prestasi as $pr){
-                    $sheet->cell('C'.$no, function($cell) use($pr){
-                        $cell->setValue($pr->nama_perilaku)
+
+                if(count($nilai->prestasi)>0){
+                    foreach($nilai->prestasi as $pr){
+                        $sheet->cell('C'.$no, function($cell) use($pr){
+                            $cell->setValue($pr->nama_perilaku)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('D'.$no, function($cell){
+                            $cell->setValue('=')
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('E'.$no, function($cell) use($pr){
+                            $cell->setValue($pr->pivot->nilai)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('F'.$no, function($cell) use($pr){
+                            $status="";
+                            if($pr->pivot->nilai<100 && $pr->pivot->nilai>=90){
+                                $status="Sangat Baik";
+                            }else if($pr->pivot->nilai<90 && $pr->pivot->nilai>=80){
+                                $status="Baik";
+                            }else if($pr->pivot->nilai<80 && $pr->pivot->nilai>=70){
+                                $status="Cukup Baik";
+                            }else if($pr->pivot->nilai<70 && $pr->pivot->nilai>=60){
+                                $status="Cukup";
+                            }else{
+                                $status="Kurang";
+                            }
+    
+                            $cell->setValue("( ".$status." )")
+                            ->setFontSize(12);
+                        });
+    
+                        $total+=$pr->pivot->nilai;
+                        $no++;
+                    }
+    
+                    $sheet->cell('C'.$no, function($cell){
+                        $cell->setValue('Jumlah')
                         ->setFontSize(12);
                     });
-
+    
                     $sheet->cell('D'.$no, function($cell){
                         $cell->setValue('=')
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('E'.$no, function($cell) use($pr){
-                        $cell->setValue($pr->pivot->nilai)
+    
+                    $sheet->cell('E'.$no, function($cell) use($total){
+                        $cell->setValue($total)
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('F'.$no, function($cell) use($pr){
+    
+                    $nos=$no+1;
+                    $ratarata=$total/count($nilai->prestasi);
+    
+                    $sheet->cell('C'.$nos, function($cell){
+                        $cell->setValue('Nilai Rata - Rata')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('D'.$nos, function($cell){
+                        $cell->setValue('=')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('E'.$nos, function($cell) use($total){
+                        $cell->setValue($total)
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('F'.$nos, function($cell) use($ratarata){
                         $status="";
-                        if($pr->pivot->nilai<100 && $pr->pivot->nilai>=90){
+                        if($ratarata<100 && $ratarata>=90){
                             $status="Sangat Baik";
-                        }else if($pr->pivot->nilai<90 && $pr->pivot->nilai>=80){
+                        }else if($ratarata<90 && $ratarata>=80){
                             $status="Baik";
-                        }else if($pr->pivot->nilai<80 && $pr->pivot->nilai>=70){
+                        }else if($ratarata<80 && $ratarata>=70){
                             $status="Cukup Baik";
-                        }else if($pr->pivot->nilai<70 && $pr->pivot->nilai>=60){
+                        }else if($ratarata<70 && $ratarata>=60){
                             $status="Cukup";
                         }else{
                             $status="Kurang";
                         }
-
+    
                         $cell->setValue("( ".$status." )")
                         ->setFontSize(12);
                     });
-
-                    $total+=$pr->pivot->nilai;
-                    $no++;
+    
+                    $sheet->cell('J12', function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $sheet->cell('J16', function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->nama_lengkap)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $sheet->cell('J17', function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->nip)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
                 }
-
-                $sheet->cell('C'.$no, function($cell){
-                    $cell->setValue('Jumlah')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('D'.$no, function($cell){
-                    $cell->setValue('=')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('E'.$no, function($cell) use($total){
-                    $cell->setValue($total)
-                    ->setFontSize(12);
-                });
-
-                $nos=$no+1;
-                $ratarata=$total/count($nilai->prestasi);
-
-                $sheet->cell('C'.$nos, function($cell){
-                    $cell->setValue('Nilai Rata - Rata')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('D'.$nos, function($cell){
-                    $cell->setValue('=')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('E'.$nos, function($cell) use($total){
-                    $cell->setValue($total)
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('F'.$nos, function($cell) use($ratarata){
-                    $status="";
-                    if($ratarata<100 && $ratarata>=90){
-                        $status="Sangat Baik";
-                    }else if($ratarata<90 && $ratarata>=80){
-                        $status="Baik";
-                    }else if($ratarata<80 && $ratarata>=70){
-                        $status="Cukup Baik";
-                    }else if($ratarata<70 && $ratarata>=60){
-                        $status="Cukup";
-                    }else{
-                        $status="Kurang";
-                    }
-
-                    $cell->setValue("( ".$status." )")
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('J12', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->cell('J16', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $sheet->cell('J17', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
 
             });
 
@@ -2221,7 +2329,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E13', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nama_lengkap);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->nama_lengkap);
+                    }   
                 });
 
                 $sheet->cell('B14', function($cell) {
@@ -2237,7 +2347,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E14', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nip);
+                    if(count($nilai->pegawai)>0){
+                        $cell->setValue($nilai->pegawai->nip);
+                    }
                 });
 
                 $sheet->cell('B15', function($cell) {
@@ -2253,7 +2365,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E15', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat);
+                    if(count($nilai->pegawai->pangkat)>0){
+                        $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat);
+                    }
                 });
 
                 $sheet->cell('B16', function($cell) {
@@ -2269,7 +2383,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E16', function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan);
+                    if(count($nilai->pegawai->jabatan)>0){
+                        $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan);
+                    }   
                 });
 
                 $sheet->cell('B17', function($cell) {
@@ -2310,7 +2426,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E19', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->nama_lengkap);
+                    }
                 });
 
                 $sheet->cell('B20', function($cell) {
@@ -2326,7 +2444,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E20', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip);
+                    if(count($nilai->penilai)>0){
+                        $cell->setValue($nilai->penilai->nip);
+                    }
                 });
 
                 $sheet->cell('B21', function($cell) {
@@ -2342,7 +2462,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E21', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat);
+                    if(count($nilai->penilai->pangkat)>0){
+                        $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat);
+                    }
                 });
 
                 $sheet->cell('B22', function($cell) {
@@ -2358,7 +2480,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E22', function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan);
+                    if(count($nilai->penilai->jabatan)>0){
+                        $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan);
+                    }
                 });
 
                 $sheet->cell('B23', function($cell) {
@@ -2400,7 +2524,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E25', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->nama_lengkap);
+                    if(count($nilai->atasan)>0){
+                        $cell->setValue($nilai->atasan->nama_lengkap);
+                    }
                 });
 
                 $sheet->cell('B26', function($cell) {
@@ -2416,7 +2542,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E26', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->nip);
+                    if(count($nilai->atasan)>0){
+                        $cell->setValue($nilai->atasan->nip);
+                    }
                 });
 
                 $sheet->cell('B27', function($cell) {
@@ -2432,7 +2560,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E27', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->pangkat[0]->nama_pangkat);
+                    if(count($nilai->atasan->pangkat)>0){
+                        $cell->setValue($nilai->atasan->pangkat[0]->nama_pangkat);
+                    }
                 });
 
                 $sheet->cell('B28', function($cell) {
@@ -2448,7 +2578,9 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('E28', function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->jabatan[0]->nama_jabatan);
+                    if(count($nilai->atasan->jabatan)>0){
+                        $cell->setValue($nilai->atasan->jabatan[0]->nama_jabatan);
+                    }
                 });
 
                 $sheet->cell('B29', function($cell) {
@@ -2516,324 +2648,326 @@ class NilaiController extends Controller
 
                 $nn=1;
                 $totalperilaku=0;
-                foreach($nilai->prestasi as $pr){
-                    $sheet->cell('C'.$rowsekarang, function($cell) use($nn){
-                        $cell->setValue($nn)
+                if(count($nilai->prestasi)>0){
+                    foreach($nilai->prestasi as $pr){
+                        $sheet->cell('C'.$rowsekarang, function($cell) use($nn){
+                            $cell->setValue($nn)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('D'.$rowsekarang, function($cell) use($pr){
+                            $cell->setValue($pr->nama_perilaku)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('H'.$rowsekarang, function($cell) use($pr){
+                            $cell->setValue($pr->pivot->nilai)
+                            ->setFontSize(12);
+                        });
+    
+                        $sheet->cell('I'.$rowsekarang, function($cell) use($pr){
+                            $status="";
+                            if($pr->pivot->nilai<100 && $pr->pivot->nilai>=90){
+                                $status="Sangat Baik";
+                            }else if($pr->pivot->nilai<90 && $pr->pivot->nilai>=80){
+                                $status="Baik";
+                            }else if($pr->pivot->nilai<80 && $pr->pivot->nilai>=70){
+                                $status="Cukup Baik";
+                            }else if($pr->pivot->nilai<70 && $pr->pivot->nilai>=60){
+                                $status="Cukup";
+                            }else{
+                                $status="Kurang";
+                            }
+    
+                            $cell->setValue("( ".$status." )")
+                            ->setFontSize(12);
+                            
+                        });
+    
+                        $totalperilaku+=$pr->pivot->nilai;
+                        $rowsekarang++;
+                        $nn++;
+                    }
+    
+                    $sheet->mergeCells('C'.$rowsekarang.':G'.$rowsekarang);
+                    $sheet->cell('C'.$rowsekarang, function($cell){
+                        $cell->setValue('Jumlah')
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('D'.$rowsekarang, function($cell) use($pr){
-                        $cell->setValue($pr->nama_perilaku)
+    
+                    $sheet->cell('H'.$rowsekarang, function($cell) use($totalperilaku){
+                        $cell->setValue($totalperilaku)
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('H'.$rowsekarang, function($cell) use($pr){
-                        $cell->setValue($pr->pivot->nilai)
+    
+                    $rowratarata=$rowsekarang+1;
+                    $sheet->cell('C'.$rowratarata, function($cell){
+                        $cell->setValue('Nilai Rata - Rata')
                         ->setFontSize(12);
                     });
-
-                    $sheet->cell('I'.$rowsekarang, function($cell) use($pr){
+    
+                    $sheet->cell('H'.$rowratarata, function($cell) use($nilai,$totalperilaku){
+                        $ratarata=$totalperilaku/count($nilai->prestasi);
+                        $cell->setValue($ratarata)
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('I'.$rowratarata, function($cell) use($nilai,$totalperilaku){
+                        $ratarata=$totalperilaku/count($nilai->prestasi);
+    
                         $status="";
-                        if($pr->pivot->nilai<100 && $pr->pivot->nilai>=90){
+                        if($ratarata<100 && $ratarata>=90){
                             $status="Sangat Baik";
-                        }else if($pr->pivot->nilai<90 && $pr->pivot->nilai>=80){
+                        }else if($ratarata<90 && $ratarata>=80){
                             $status="Baik";
-                        }else if($pr->pivot->nilai<80 && $pr->pivot->nilai>=70){
+                        }else if($ratarata<80 && $ratarata>=70){
                             $status="Cukup Baik";
-                        }else if($pr->pivot->nilai<70 && $pr->pivot->nilai>=60){
+                        }else if($ratarata<70 && $ratarata>=60){
                             $status="Cukup";
                         }else{
                             $status="Kurang";
                         }
-
+    
                         $cell->setValue("( ".$status." )")
                         ->setFontSize(12);
-                        
                     });
-
-                    $totalperilaku+=$pr->pivot->nilai;
-                    $rowsekarang++;
-                    $nn++;
+    
+                    $rowperilaku=$rowratarata+1;
+                    $sheet->cell('C'.$rowperilaku, function($cell){
+                        $cell->setValue('Nilai Perilaku Kerja')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('H'.$rowperilaku, function($cell) use($nilai,$totalperilaku){
+                        $ratarata=$totalperilaku/count($nilai->prestasi);
+                        $cell->setValue($ratarata)
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('I'.$rowperilaku, function($cell) use($nilai,$totalperilaku){
+                        $cell->setValue('X 40')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('J'.$rowperilaku, function($cell) use($nilai,$totalperilaku){
+                        $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
+    
+                        $cell->setValue($ratarata)
+                        ->setFontSize(12);
+                    });
+    
+                    $rowprestasi=$rowperilaku+1;
+                    $sheet->mergeCells('A'.$rowprestasi.':I'.$rowprestasi);
+    
+                    $sheet->cell('A'.$rowprestasi, function($cell){
+                        $cell->setValue('Nilai Prestasi Kerja')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('J'.$rowprestasi, function($cell) use($nilai,$totalperilaku){
+                        $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
+                        $total=$nilai->nilai_pencapaian*60/100;
+    
+                        $hasil=$total+$ratarata;
+                        $cell->setValue($hasil)
+                        ->setFontSize(12);
+                    });
+    
+                    $rowpr=$rowprestasi+1;
+                    $sheet->cell('J'.$rowpr, function($cell) use($nilai,$totalperilaku){
+                        $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
+                        $total=$nilai->nilai_pencapaian*60/100;
+    
+                        $hasil=$total+$ratarata;
+    
+                        $status="";
+                        if($hasil<100 && $hasil>=90){
+                            $status="Sangat Baik";
+                        }else if($hasil<90 && $hasil>=80){
+                            $status="Baik";
+                        }else if($hasil<80 && $hasil>=70){
+                            $status="Cukup Baik";
+                        }else if($hasil<70 && $hasil>=60){
+                            $status="Cukup";
+                        }else{
+                            $status="Kurang";
+                        }
+    
+                        $cell->setValue($status)
+                        ->setFontSize(12);
+                    });
+    
+                    $rowkeberatan=$rowpr+4;
+                    $rowkeberatans=$rowkeberatan+1;
+                    $sheet->cell('A'.$rowkeberatan, function($cell){
+                        $cell->setValue('5.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('B'.$rowkeberatan, function($cell){
+                        $cell->setValue('KEBERATAN DARI PEGAWAI NEGERI SIPIL')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('B'.$rowkeberatans, function($cell){
+                        $cell->setValue('YANG DINILAI (APABILA ADA)')
+                        ->setFontSize(12);
+                    });
+    
+                    $rowtanggalkeberatan=$rowkeberatan+6;
+                    $sheet->cell('I'.$rowtanggalkeberatan, function($cell){
+                        $cell->setValue('Tanggal ...........................................')
+                        ->setFontSize(12);
+                    });
+    
+                    $rowtanggapan=$rowtanggalkeberatan+2;
+                    $sheet->cell('A'.$rowtanggapan, function($cell){
+                        $cell->setValue('6.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('B'.$rowtanggapan, function($cell){
+                        $cell->setValue('TANGGAPAN PEJABAT PENILAI ATAS KEBERATAN')
+                        ->setFontSize(12);
+                    });
+    
+                    $rowtanggaltanggapan=$rowtanggapan+4;
+                    $sheet->cell('I'.$rowtanggaltanggapan, function($cell){
+                        $cell->setValue('Tanggal ...........................................')
+                        ->setFontSize(12);
+                    });
+    
+    
+                    $rowkeputusan=$rowtanggaltanggapan+2;
+                    $sheet->cell('A'.$rowkeputusan, function($cell){
+                        $cell->setValue('7.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('B'.$rowkeputusan, function($cell){
+                        $cell->setValue('KEPUTUSAN ATASAN PEJABAT PENILAI ATAS KEBERATAN')
+                        ->setFontSize(12);
+                    });
+    
+                    $rowtanggalkeputusan=$rowkeputusan+4;
+                    $sheet->cell('I'.$rowtanggalkeputusan, function($cell){
+                        $cell->setValue('Tanggal ...........................................')
+                        ->setFontSize(12);
+                    });
+    
+                    $rowrekomendasi=$rowtanggalkeputusan+2;
+                    $sheet->cell('A'.$rowrekomendasi, function($cell){
+                        $cell->setValue('8.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('B'.$rowrekomendasi, function($cell){
+                        $cell->setValue('REKOMENDASI')
+                        ->setFontSize(12);
+                    });
+    
+    
+                    $rowdibuat=$rowrekomendasi+5;
+                    $sheet->cell('G'.$rowdibuat, function($cell){
+                        $cell->setValue('9.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('H'.$rowdibuat, function($cell){
+                        $cell->setValue('DIBUAT TANGGAL,     '.date('F Y'))
+                        ->setFontSize(12);
+                    });
+    
+                    $rowafterdibuat=$rowdibuat+1;
+                    $sheet->mergeCells('H'.$rowafterdibuat.':J'.$rowafterdibuat);
+                    $sheet->cell('H'.$rowafterdibuat, function($cell){
+                        $cell->setValue('PEJABAT PENILAI')
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $rownamapenilai=$rowafterdibuat+5;
+                    $sheet->mergeCells('H'.$rownamapenilai.':J'.$rownamapenilai);
+                    $sheet->cell('H'.$rownamapenilai, function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->nama_lengkap)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $rownippenilai=$rownamapenilai+1;
+                    $sheet->mergeCells('H'.$rownippenilai.':J'.$rownippenilai);
+                    $sheet->cell('H'.$rownippenilai, function($cell) use($nilai){
+                        $cell->setValue($nilai->penilai->nip)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $rowditerima=$rownippenilai+2;
+                    $sheet->cell('A'.$rowditerima, function($cell) use($nilai){
+                        $cell->setValue('10.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('B'.$rowditerima, function($cell) use($nilai){
+                        $cell->setValue('DITERIMA TANGGAL, '.date('F Y'))
+                        ->setFontSize(12);
+                    });
+    
+                    $rowafterditerima=$rowditerima+1;
+                    $sheet->cell('B'.$rowafterditerima, function($cell) use($nilai){
+                        $cell->setValue('PEGAWAI NEGERI SIPIL YANG DINILAI')
+                        ->setFontSize(12);
+                    });
+    
+                    $rowyangdinilai=$rowafterditerima+4;
+                    $sheet->mergeCells('B'.$rowyangdinilai.':F'.$rowyangdinilai);
+                    $sheet->cell('B'.$rowyangdinilai, function($cell) use($nilai){
+                        $cell->setValue($nilai->pegawai->nama_lengkap)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $rownipyangdinilai=$rowyangdinilai+1;
+                    $sheet->mergeCells('B'.$rownipyangdinilai.':F'.$rownipyangdinilai);
+                    $sheet->cell('B'.$rownipyangdinilai, function($cell) use($nilai){
+                        $cell->setValue($nilai->pegawai->nip)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $rowditerimaatasan=$rownipyangdinilai+2;
+                    $sheet->cell('G'.$rowditerimaatasan, function($cell){
+                        $cell->setValue('11.')
+                        ->setFontSize(12);
+                    });
+    
+                    $sheet->cell('H'.$rowditerimaatasan, function($cell) use($nilai){
+                        $cell->setValue('DITERIMA TANGGAL,  '.date('F Y'))
+                        ->setFontSize(12);
+                    });
+    
+                    $rowafterditerimaatasan=$rowditerimaatasan+1;
+                    $sheet->cell('H'.$rowafterditerimaatasan, function($cell) use($nilai){
+                        $cell->setValue('ATASAN PEJABAT YANG MENILAI')
+                        ->setFontSize(12);
+                    });
+    
+                    $rownipatasan=$rowafterditerimaatasan+4;
+                    $sheet->mergeCells('H'.$rownipatasan.':J'.$rownipatasan);
+                    $sheet->cell('H'.$rownipatasan, function($cell) use($nilai){
+                        $cell->setValue($nilai->atasan->nama_lengkap)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
+    
+                    $rownamaatasan=$rownipatasan+1;
+                    $sheet->mergeCells('H'.$rownamaatasan.':J'.$rownamaatasan);
+                    $sheet->cell('H'.$rownamaatasan, function($cell) use($nilai){
+                        $cell->setValue($nilai->atasan->nip)
+                        ->setFontSize(12)
+                        ->setAlignment('center');
+                    });
                 }
-
-                $sheet->mergeCells('C'.$rowsekarang.':G'.$rowsekarang);
-                $sheet->cell('C'.$rowsekarang, function($cell){
-                    $cell->setValue('Jumlah')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('H'.$rowsekarang, function($cell) use($totalperilaku){
-                    $cell->setValue($totalperilaku)
-                    ->setFontSize(12);
-                });
-
-                $rowratarata=$rowsekarang+1;
-                $sheet->cell('C'.$rowratarata, function($cell){
-                    $cell->setValue('Nilai Rata - Rata')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('H'.$rowratarata, function($cell) use($nilai,$totalperilaku){
-                    $ratarata=$totalperilaku/count($nilai->prestasi);
-                    $cell->setValue($ratarata)
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('I'.$rowratarata, function($cell) use($nilai,$totalperilaku){
-                    $ratarata=$totalperilaku/count($nilai->prestasi);
-
-                    $status="";
-                    if($ratarata<100 && $ratarata>=90){
-                        $status="Sangat Baik";
-                    }else if($ratarata<90 && $ratarata>=80){
-                        $status="Baik";
-                    }else if($ratarata<80 && $ratarata>=70){
-                        $status="Cukup Baik";
-                    }else if($ratarata<70 && $ratarata>=60){
-                        $status="Cukup";
-                    }else{
-                        $status="Kurang";
-                    }
-
-                    $cell->setValue("( ".$status." )")
-                    ->setFontSize(12);
-                });
-
-                $rowperilaku=$rowratarata+1;
-                $sheet->cell('C'.$rowperilaku, function($cell){
-                    $cell->setValue('Nilai Perilaku Kerja')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('H'.$rowperilaku, function($cell) use($nilai,$totalperilaku){
-                    $ratarata=$totalperilaku/count($nilai->prestasi);
-                    $cell->setValue($ratarata)
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('I'.$rowperilaku, function($cell) use($nilai,$totalperilaku){
-                    $cell->setValue('X 40')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('J'.$rowperilaku, function($cell) use($nilai,$totalperilaku){
-                    $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
-
-                    $cell->setValue($ratarata)
-                    ->setFontSize(12);
-                });
-
-                $rowprestasi=$rowperilaku+1;
-                $sheet->mergeCells('A'.$rowprestasi.':I'.$rowprestasi);
-
-                $sheet->cell('A'.$rowprestasi, function($cell){
-                    $cell->setValue('Nilai Prestasi Kerja')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('J'.$rowprestasi, function($cell) use($nilai,$totalperilaku){
-                    $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
-                    $total=$nilai->nilai_pencapaian*60/100;
-
-                    $hasil=$total+$ratarata;
-                    $cell->setValue($hasil)
-                    ->setFontSize(12);
-                });
-
-                $rowpr=$rowprestasi+1;
-                $sheet->cell('J'.$rowpr, function($cell) use($nilai,$totalperilaku){
-                    $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
-                    $total=$nilai->nilai_pencapaian*60/100;
-
-                    $hasil=$total+$ratarata;
-
-                    $status="";
-                    if($hasil<100 && $hasil>=90){
-                        $status="Sangat Baik";
-                    }else if($hasil<90 && $hasil>=80){
-                        $status="Baik";
-                    }else if($hasil<80 && $hasil>=70){
-                        $status="Cukup Baik";
-                    }else if($hasil<70 && $hasil>=60){
-                        $status="Cukup";
-                    }else{
-                        $status="Kurang";
-                    }
-
-                    $cell->setValue($status)
-                    ->setFontSize(12);
-                });
-
-                $rowkeberatan=$rowpr+4;
-                $rowkeberatans=$rowkeberatan+1;
-                $sheet->cell('A'.$rowkeberatan, function($cell){
-                    $cell->setValue('5.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('B'.$rowkeberatan, function($cell){
-                    $cell->setValue('KEBERATAN DARI PEGAWAI NEGERI SIPIL')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('B'.$rowkeberatans, function($cell){
-                    $cell->setValue('YANG DINILAI (APABILA ADA)')
-                    ->setFontSize(12);
-                });
-
-                $rowtanggalkeberatan=$rowkeberatan+6;
-                $sheet->cell('I'.$rowtanggalkeberatan, function($cell){
-                    $cell->setValue('Tanggal ...........................................')
-                    ->setFontSize(12);
-                });
-
-                $rowtanggapan=$rowtanggalkeberatan+2;
-                $sheet->cell('A'.$rowtanggapan, function($cell){
-                    $cell->setValue('6.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('B'.$rowtanggapan, function($cell){
-                    $cell->setValue('TANGGAPAN PEJABAT PENILAI ATAS KEBERATAN')
-                    ->setFontSize(12);
-                });
-
-                $rowtanggaltanggapan=$rowtanggapan+4;
-                $sheet->cell('I'.$rowtanggaltanggapan, function($cell){
-                    $cell->setValue('Tanggal ...........................................')
-                    ->setFontSize(12);
-                });
-
-
-                $rowkeputusan=$rowtanggaltanggapan+2;
-                $sheet->cell('A'.$rowkeputusan, function($cell){
-                    $cell->setValue('7.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('B'.$rowkeputusan, function($cell){
-                    $cell->setValue('KEPUTUSAN ATASAN PEJABAT PENILAI ATAS KEBERATAN')
-                    ->setFontSize(12);
-                });
-
-                $rowtanggalkeputusan=$rowkeputusan+4;
-                $sheet->cell('I'.$rowtanggalkeputusan, function($cell){
-                    $cell->setValue('Tanggal ...........................................')
-                    ->setFontSize(12);
-                });
-
-                $rowrekomendasi=$rowtanggalkeputusan+2;
-                $sheet->cell('A'.$rowrekomendasi, function($cell){
-                    $cell->setValue('8.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('B'.$rowrekomendasi, function($cell){
-                    $cell->setValue('REKOMENDASI')
-                    ->setFontSize(12);
-                });
-
-
-                $rowdibuat=$rowrekomendasi+5;
-                $sheet->cell('G'.$rowdibuat, function($cell){
-                    $cell->setValue('9.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('H'.$rowdibuat, function($cell){
-                    $cell->setValue('DIBUAT TANGGAL,     '.date('F Y'))
-                    ->setFontSize(12);
-                });
-
-                $rowafterdibuat=$rowdibuat+1;
-                $sheet->mergeCells('H'.$rowafterdibuat.':J'.$rowafterdibuat);
-                $sheet->cell('H'.$rowafterdibuat, function($cell){
-                    $cell->setValue('PEJABAT PENILAI')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $rownamapenilai=$rowafterdibuat+5;
-                $sheet->mergeCells('H'.$rownamapenilai.':J'.$rownamapenilai);
-                $sheet->cell('H'.$rownamapenilai, function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $rownippenilai=$rownamapenilai+1;
-                $sheet->mergeCells('H'.$rownippenilai.':J'.$rownippenilai);
-                $sheet->cell('H'.$rownippenilai, function($cell) use($nilai){
-                    $cell->setValue($nilai->penilai->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $rowditerima=$rownippenilai+2;
-                $sheet->cell('A'.$rowditerima, function($cell) use($nilai){
-                    $cell->setValue('10.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('B'.$rowditerima, function($cell) use($nilai){
-                    $cell->setValue('DITERIMA TANGGAL, '.date('F Y'))
-                    ->setFontSize(12);
-                });
-
-                $rowafterditerima=$rowditerima+1;
-                $sheet->cell('B'.$rowafterditerima, function($cell) use($nilai){
-                    $cell->setValue('PEGAWAI NEGERI SIPIL YANG DINILAI')
-                    ->setFontSize(12);
-                });
-
-                $rowyangdinilai=$rowafterditerima+4;
-                $sheet->mergeCells('B'.$rowyangdinilai.':F'.$rowyangdinilai);
-                $sheet->cell('B'.$rowyangdinilai, function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $rownipyangdinilai=$rowyangdinilai+1;
-                $sheet->mergeCells('B'.$rownipyangdinilai.':F'.$rownipyangdinilai);
-                $sheet->cell('B'.$rownipyangdinilai, function($cell) use($nilai){
-                    $cell->setValue($nilai->pegawai->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $rowditerimaatasan=$rownipyangdinilai+2;
-                $sheet->cell('G'.$rowditerimaatasan, function($cell){
-                    $cell->setValue('11.')
-                    ->setFontSize(12);
-                });
-
-                $sheet->cell('H'.$rowditerimaatasan, function($cell) use($nilai){
-                    $cell->setValue('DITERIMA TANGGAL,  '.date('F Y'))
-                    ->setFontSize(12);
-                });
-
-                $rowafterditerimaatasan=$rowditerimaatasan+1;
-                $sheet->cell('H'.$rowafterditerimaatasan, function($cell) use($nilai){
-                    $cell->setValue('ATASAN PEJABAT YANG MENILAI')
-                    ->setFontSize(12);
-                });
-
-                $rownipatasan=$rowafterditerimaatasan+4;
-                $sheet->mergeCells('H'.$rownipatasan.':J'.$rownipatasan);
-                $sheet->cell('H'.$rownipatasan, function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->nama_lengkap)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
-
-                $rownamaatasan=$rownipatasan+1;
-                $sheet->mergeCells('H'.$rownamaatasan.':J'.$rownamaatasan);
-                $sheet->cell('H'.$rownamaatasan, function($cell) use($nilai){
-                    $cell->setValue($nilai->atasan->nip)
-                    ->setFontSize(12)
-                    ->setAlignment('center');
-                });
             });
         })->export('xlsx');
     }
