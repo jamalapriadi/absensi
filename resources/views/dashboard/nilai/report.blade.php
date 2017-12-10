@@ -18,7 +18,10 @@
                 <tr>
                     <td>1.</td>
                     <td>Nama</td>
-                    <td>{{$nilai->penilai->nama_lengkap}}</td>
+                    <td>
+                        <input type="hidden" name="pegawai" id="pegawai" value="{{$nilai->pegawai->id}}">
+                        {{$nilai->penilai->nama_lengkap}}
+                    </td>
                     <td>1.</td>
                     <td>Nama</td>
                     <td>{{$nilai->pegawai->nama_lengkap}}</td>
@@ -100,6 +103,7 @@
 @section('js')
     <script>
         $(function(){
+            var pegawai="{{$nilai->pegawai->id}}";
             var jabatan="{{$nilai->pegawai->id}}";
             var skp_id="{{$nilai->id}}";
             var idtugas="";
@@ -192,6 +196,7 @@
                     },
                     success:function(result){
                         var el="";
+                        console.log(result);
                         if(result.tugas.length>0){
                             el+='<form name="formHasilSkp" id="formHasilSkp" onsubmit="return false;"><table class="table table-bordered">'+
                                 '<thead>'+
@@ -233,11 +238,16 @@
                                                 '<td>'+biaya+'</td>'+
                                                 '<td>'+d.perhitungan+'</td>'+
                                                 '<td>'+d.nilai_pencapaian+'</td>'+
-                                                '<td><a class="btn btn-sm btn-warning edittarget" target="'+d.id+'" kode="'+b.id+'" tugas="'+b.nama_tugas+'" kuan="'+d.kuant+'" kual="'+d.kual+'" output="'+d.output+'" waktu="'+d.waktu+'" periode="'+d.periode_waktu+'" biaya="'+d.biaya+'" perhitungan="'+d.perhitungan+'" nilai="'+d.nilai_pencapaian+'"><i class="icon-pencil4"></i></a></td>';
+                                                '<td><a class="btn btn-sm btn-warning edittarget" target="'+d.id+'" kuant="'+b.kuant+'" realisasi="'+b.id+'" kode="'+b.id+'" tugas="'+b.nama_tugas+'" kuan="'+d.kuant+'" kual="'+d.kual+'" output="'+d.output+'" waktu="'+d.waktu+'" periode="'+d.periode_waktu+'" biaya="'+d.biaya+'" perhitungan="'+d.perhitungan+'" nilai="'+d.nilai_pencapaian+'"><i class="icon-pencil4"></i></a></td>';
                                             })
                                         }else{
-                                            el+="<td colspan='6' class='text-center'>Tidak ada Data</td>"+
-                                                '<td><a class="btn btn-sm btn-primary addtarget" kode="'+b.id+'" tugas="'+b.nama_tugas+'"><i class="icon-add"></i></a></td>';
+                                            if(b.realisasi.length>0){
+                                                el+="<td colspan='6' class='text-center'>Tidak ada Data</td>"+
+                                                '<td><a class="btn btn-sm btn-primary addtarget" kode="'+b.id+'" kuant="'+b.realisasi[0].kuant+'" realisasi="'+b.realisasi[0].id+'" tugas="'+b.nama_tugas+'"><i class="icon-add"></i></a></td>';
+                                            }else{
+                                                el+="<td colspan='6' class='text-center'>Tidak ada Data Target</td>"+
+                                                '<td></td>';
+                                            }
                                         }
                                     el+='</tr>';
                                 })
@@ -317,9 +327,6 @@
 
                         $("#divPerilakuKerja").empty().html(el);
                         $("#prestasi").DataTable({
-                            buttons: [
-                                'copy', 'excel', 'pdf'
-                            ],
                             colVis: {
                                 buttonText: "<i class='icon-three-bars'></i> <span class='caret'></span>",
                                 align: "right",
@@ -327,8 +334,33 @@
                                 showAll: "Show all",
                                 showNone: "Hide all"
                             },
-                            bDestroy: true
+                            bDestroy: true,
+                            "iDisplayLength": 25,
+                            order:[1,'asc']
                         });
+
+                        // Launch Uniform styling for checkboxes
+                        $('.ColVis_Button').addClass('btn btn-primary btn-icon').on('click mouseover', function() {
+                            $('.ColVis_collection input').uniform();
+                        });
+
+
+                        // Add placeholder to the datatable filter option
+                        $('.dataTables_filter input[type=search]').attr('placeholder', 'Type and Enter...');
+
+
+                        // Enable Select2 select for the length option
+                        $('.dataTables_length select').select2({
+                            minimumResultsForSearch: "-1"
+                        }); 
+
+                        $('.dataTables_filter input[type=search]').unbind().keyup(function(e) {
+                            var value = $(this).val();
+
+                            if (e.keyCode == 13) {
+                                table.search(value).draw();
+                            }
+                        });  
                     },
                     error:function(){
                         $("#divPerilakuKerja").empty().html("<div class='alert alert-danger'>Failed load data</div>");
@@ -348,9 +380,13 @@
                 showPerilakuKerja();
             })
 
+            var kuant="";
+            var realisasi="";
             $(document).on("click","a.addtarget",function(){
                 idtugas=$(this).attr("kode");
                 var tugas=$(this).attr("tugas");
+                kuant=$(this).attr("kuant");
+                realisasi=$(this).attr("realisasi");
 
                 var el="";
                 el+='<div id="modalHistory" class="modal fade" data-backdrop="static" data-keyboard="false">'+
@@ -381,6 +417,7 @@
                                         '<div class="col-lg-9">'+
                                             '<select name="output" id="output" class="form-control">'+
                                                 '<option value="">--Pilih Output--</option>'+
+                                                '<option value="Perkara">Perkara</option>'+
                                                 '<option value="Keg">Kegiatan</option>'+
                                                 '<option value="Berkas">Berkas</option>'+
                                                 '<option value="Daftar">Daftar</option>'+
@@ -416,19 +453,7 @@
                                     '<div class="form-group">'+
                                         '<label class="control-label col-lg-3">Biaya</label>'+
                                         '<div class="col-lg-9">'+
-                                            '<input class="form-control" name="biaya" placeholder="Biaya">'+
-                                        '</div>'+
-                                    '</div>'+
-                                    '<div class="form-group">'+
-                                        '<label class="control-label col-lg-3">Penghitungan</label>'+
-                                        '<div class="col-lg-9">'+
-                                            '<input class="form-control" name="penghitungan" placeholder="Penghitungan">'+
-                                        '</div>'+
-                                    '</div>'+
-                                    '<div class="form-group">'+
-                                        '<label class="control-label col-lg-3">Nilai Capaian SKP</label>'+
-                                        '<div class="col-lg-9">'+
-                                            '<input class="form-control" name="nilai" placeholder="nilai">'+
+                                            '<input type="number" class="form-control" name="biaya" placeholder="Biaya" required>'+
                                         '</div>'+
                                     '</div>'+
                                 '</div>'+
@@ -448,6 +473,8 @@
 
             $(document).on("click","a.edittarget",function(){
                 idtugas=$(this).attr("target");
+                kuant=$(this).attr("kuant");
+                realisasi=$(this).attr("realisasi");
                 var tugas=$(this).attr("tugas");
                 var kuan=$(this).attr("kuan");
                 var kual=$(this).attr("kual");
@@ -487,6 +514,7 @@
                                         '<div class="col-lg-9">'+
                                             '<select name="output" id="output" class="form-control">'+
                                                 '<option value="">--Pilih Output--</option>'+
+                                                '<option value="Perkara">Perkara</option>'+
                                                 '<option value="Keg">Kegiatan</option>'+
                                                 '<option value="Berkas">Berkas</option>'+
                                                 '<option value="Daftar">Daftar</option>'+
@@ -522,19 +550,7 @@
                                     '<div class="form-group">'+
                                         '<label class="control-label col-lg-3">Biaya</label>'+
                                         '<div class="col-lg-9">'+
-                                            '<input class="form-control" name="biaya" value="'+biaya+'" placeholder="Biaya">'+
-                                        '</div>'+
-                                    '</div>'+
-                                    '<div class="form-group">'+
-                                        '<label class="control-label col-lg-3">Penghitungan</label>'+
-                                        '<div class="col-lg-9">'+
-                                            '<input class="form-control" name="penghitungan" value="'+perhitungan+'" placeholder="Penghitungan">'+
-                                        '</div>'+
-                                    '</div>'+
-                                    '<div class="form-group">'+
-                                        '<label class="control-label col-lg-3">Nilai Capaian SKP</label>'+
-                                        '<div class="col-lg-9">'+
-                                            '<input class="form-control" name="nilai" value="'+nilai+'" placeholder="nilai">'+
+                                            '<input type="number" class="form-control" name="biaya" value="'+biaya+'" placeholder="Biaya" required>'+
                                         '</div>'+
                                     '</div>'+
                                 '</div>'+
@@ -558,11 +574,14 @@
                 var data = new FormData(this);
                 data.append("tugas",idtugas);
                 data.append("type","realisasi");
+                data.append("kuant",kuant);
+                data.append("target",realisasi);
+                data.append("pegawai",pegawai);
                 if($("#formTarget")[0].checkValidity()) {
                     //updateAllMessageForms();
                     e.preventDefault();
                     $.ajax({
-                        url         : "{{URL::to('home/data/target')}}",
+                        url         : "{{URL::to('home/data/target-realisasi')}}",
                         type        : 'post',
                         data        : data,
                         dataType    : 'JSON',
@@ -578,6 +597,7 @@
                             if(data.success==true){
                                 $('#pesanTarget').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
                                 showFormSkpRealisasi();
+                                $("#modalHistory").modal("hide");
                             }else{
                                 $('#pesanTarget').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
                             }
@@ -592,12 +612,15 @@
             $(document).on("submit","#formUpdateTarget",function(e){
                 var data = new FormData(this);
                 data.append("type","realisasi");
+                data.append("kuant",kuant);
+                data.append("target",realisasi);
+                data.append("pegawai",pegawai);
                 data.append("_method","PUT");
                 if($("#formUpdateTarget")[0].checkValidity()) {
                     //updateAllMessageForms();
                     e.preventDefault();
                     $.ajax({
-                        url         : "{{URL::to('home/data/target/')}}"+idtugas,
+                        url         : "{{URL::to('home/data/realisasi')}}/"+idtugas,
                         type        : 'post',
                         data        : data,
                         dataType    : 'JSON',
@@ -613,6 +636,7 @@
                             if(data.success==true){
                                 $('#pesanTarget').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
                                 showFormSkpRealisasi();
+                                $("#modalHistory").modal("hide");
                             }else{
                                 $('#pesanTarget').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
                             }

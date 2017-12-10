@@ -58,10 +58,12 @@ Route::group(['prefix'=>'home'],function(){
 		Route::put('tugas/{id}','JabatanController@update_tugas');
 		Route::delete('tugas/{id}','JabatanController@delete_tugas');
 		Route::post('target','JabatanController@target_store');
+		Route::post('target-realisasi','JabatanController@realisasi_store');
 		Route::get('target/{id}','JabatanController@target_by_id');
 		Route::get('cek-target/{id}','JabatanController@cek_target');
 		Route::delete('target/{id}','JabatanController@hapus_target');
 		Route::put('target/{id}','JabatanController@update_target');
+		Route::put('realisasi/{id}','JabatanController@update_realisasi');
 		Route::get('nilai-skp','NilaiController@nilai_skp_data');
 
 		Route::get('list-pegawai','PegawaiController@list_pegawai');
@@ -88,4 +90,84 @@ Route::group(['prefix'=>'home'],function(){
 		Route::post('change-password','UserController@change_password');
 		Route::post('approve-kegiatan','HomeController@approve_kegiatan');
 	});
+});
+
+Route::get('tes-rumus',function(){
+	$target_kuant=607;
+	$target_kual=100;
+	$target_waktu=12;
+	$target_biaya=0;
+
+	$realisasi_kuant=607;
+	$realisasi_kual=89;
+	$realisasi_waktu=12;
+	$realisasi_biaya=0;
+
+	if($target_kuant>0){
+		$a=1;
+	}else{
+		$a=0;
+	}
+
+	if($realisasi_waktu!=0){
+		$persen_waktu=100-($realisasi_waktu/$target_waktu*100);
+	}else{
+		$persen_waktu=0;
+	}
+
+	if($realisasi_biaya!=0){
+		$persen_biaya=100-($realisasi_biaya/$target_biaya*100);
+	}else{
+		$persen_biaya=0;
+	}
+
+	$kuantitas=$realisasi_kuant/$target_kuant*100;
+	$kualitas=$realisasi_kual/$target_kual*100;
+
+	if($persen_waktu>24){
+		$waktu=76-((((1.76*$target_waktu-$realisasi_waktu)/$target_waktu)*100)-100);
+	}else{
+		$waktu=((1.76*$target_waktu-$realisasi_waktu)/$target_waktu)*100;
+	}
+
+	if($persen_biaya!=0){
+		if($persen_biaya>24){
+			$biaya=76-((((1.76*$target_biaya-$realisasi_biaya)/$target_biaya)*100)-100);
+		}else{
+			$biaya=((1.76*$target_biaya-$realisasi_biaya)/$target_biaya)*100;
+		}
+	}else{
+		$biaya=0;
+	}
+
+	$penghitungan=$kuantitas+$kualitas+$waktu+$biaya;
+
+	if($realisasi_biaya==""){
+		$nilai_capaian_skp=$penghitungan/3;
+	}else{
+		$nilai_capaian_skp=$penghitungan/4;
+	}
+
+	return array(
+		'target'=>array(
+			'kuant'=>$target_kuant,
+			'kual'=>$target_kual,
+			'waktu'=>$target_waktu,
+			'biaya'=>$target_biaya
+		),
+		'realisasi'=>array(
+			'kuant'=>$realisasi_kuant,
+			'kual'=>$realisasi_kual,
+			'waktu'=>$realisasi_waktu,
+			'biaya'=>$realisasi_biaya
+		),
+		'persen_waktu'=>$persen_waktu,
+		'persen_biaya'=>$persen_biaya,
+		'kualitas'=>$kualitas,
+		'kuantitas'=>$kuantitas,
+		'waktu'=>$waktu,
+		'biaya'=>$biaya,
+		'penghitungan'=>$penghitungan,
+		'nilai_capaian_skp'=>$nilai_capaian_skp
+	);
 });

@@ -279,6 +279,9 @@ class NilaiController extends Controller
                 'tugas.target'=>function($q){
                     $q->where('type','realisasi');
                 },
+                'tugas.realisasi'=>function($q){
+                    $q->where('type','target');
+                },
                 'nilai'=>function($q) use($sasaran){
                     $q->where('sasaran_kerja_id',$sasaran);
                 },
@@ -567,28 +570,49 @@ class NilaiController extends Controller
                         'height'    => 25
                     ),
                 ));
+
+                $objDrawing = new \PHPExcel_Worksheet_Drawing;
+                $objDrawing->setPath(public_path('img/logo.png')); //your image path
+                $objDrawing->setCoordinates('E2');
+                $objDrawing->setWorksheet($sheet);
                 
                 $sheet->cell('A8', function($cell) {
                     $cell->setValue('PENILAIAN PRESTASI KERJA')
-                    ->setFontSize(14)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '14',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A9', function($cell) {
                     $cell->setValue('PEGAWAI NEGERI SIPIL')
-                    ->setFontSize(14)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '14',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A15', function($cell) {
                     $cell->setValue('Jangka Waktu Penilaian')
-                    ->setFontSize(14)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '14',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A16', function($cell) use($sasaran){
                     $cell->setValue(date('d F Y',strtotime($sasaran->start_periode))." - ".date('d F Y',strtotime($sasaran->end_periode)))
-                    ->setFontSize(14)
+                    ->setFont(array(
+                        'size'       => '14',
+                        'bold'       =>  true
+                    ))
+                    ->setValignment('center')
                     ->setAlignment('center');
                 });
 
@@ -604,7 +628,10 @@ class NilaiController extends Controller
 
                 $sheet->cell('F18', function($cell) use($nilai) {
                     $cell->setValue($nilai->pegawai->nama_lengkap)
-                    ->setFontSize(12);
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
 
                 $sheet->cell('B19', function($cell) {
@@ -619,7 +646,10 @@ class NilaiController extends Controller
 
                 $sheet->cell('F19', function($cell) use($nilai){
                     $cell->setValue($nilai->pegawai->nip)
-                    ->setFontSize(12);
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
 
                 $sheet->cell('B20', function($cell) {
@@ -635,7 +665,10 @@ class NilaiController extends Controller
                 $sheet->cell('F20', function($cell) use($nilai){
                     if(count($nilai->pegawai->pangkat)>0){
                         $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat)
-                            ->setFontSize(12);
+                            ->setFont(array(
+                                'size'       => '12',
+                                'bold'       =>  true
+                            ));
                     }else{
                         $cell->setValue('Pangkat Belum Ada')
                             ->setFontSize(12);
@@ -655,7 +688,10 @@ class NilaiController extends Controller
                 $sheet->cell('F21', function($cell) use($nilai){
                     if(count($nilai->pegawai->jabatan)>0){
                         $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan)
-                            ->setFontSize(12);
+                            ->setFont(array(
+                                'size'       => '12',
+                                'bold'       =>  true
+                            ));
                     }else{
                         $cell->setValue('Jabatan Belum Ada')
                         ->setFontSize(12);
@@ -674,18 +710,27 @@ class NilaiController extends Controller
 
                 $sheet->cell('F22', function($cell) use($instansi){
                     $cell->setValue($instansi->nama_instansi)
-                    ->setFontSize(12);
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
 
                 $sheet->cell('A39', function($cell) use($instansi){
                     $cell->setValue($instansi->nama_instansi)
-                    ->setFontSize(14)
+                    ->setFont(array(
+                        'size'       => '14',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A40', function($cell){
                     $cell->setValue('TAHUN '.date('Y'))
-                    ->setFontSize(14)
+                    ->setFont(array(
+                        'size'       => '14',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -697,26 +742,79 @@ class NilaiController extends Controller
                 $sheet->mergeCells('B6:E6');
                 $sheet->mergeCells('B12:E12');
                 $sheet->mergeCells('B18:E18');
+                $sheet->mergeCells('A7:A11');
+                $sheet->mergeCells('A13:A17');
+                $sheet->mergeCells('A19:A23');
 
-                $sheet->setSize(array(
-                    'A1' => array(
-                        'width'     => 10,
-                        'height'    => 25
-                    ),
-                    'D3' => array(
-                        'width'     => 5,
-                        'height'    => 25
-                    ),
-                    'D4' => array(
-                        'width'     => 5,
-                        'height'    => 25
-                    )
+                /* set border */
+                $sheet->setBorder('A6', 'thin');
+                $sheet->setBorder('A7', 'thin');
+                $sheet->setBorder('A12', 'thin');
+                $sheet->setBorder('A13', 'thin');
+                $sheet->setBorder('A18', 'thin');
+                $sheet->setBorder('A19:A23', 'thin');
+
+                $sheet->setBorder('B6', 'thin');
+                $sheet->setBorder('B7:E7', 'thin');
+                $sheet->setBorder('B8:E8', 'thin');
+                $sheet->setBorder('B9:E9', 'thin');
+                $sheet->setBorder('B10:E10', 'thin');
+                $sheet->setBorder('B11:E11', 'thin');
+
+                $sheet->setBorder('B12', 'thin');
+                $sheet->setBorder('B13:E13', 'thin');
+                $sheet->setBorder('B14:E14', 'thin');
+                $sheet->setBorder('B15:E15', 'thin');
+                $sheet->setBorder('B16:E16', 'thin');
+                $sheet->setBorder('B17:E17', 'thin');
+
+                $sheet->setBorder('B18', 'thin');
+                $sheet->setBorder('B19:E19', 'thin');
+                $sheet->setBorder('B20:E20', 'thin');
+                $sheet->setBorder('B21:E21', 'thin');
+                $sheet->setBorder('B22:E22', 'thin');
+                $sheet->setBorder('B23:E23', 'thin');
+                /* end set border */
+
+                /* set size */
+                $sheet->setHeight(array(
+                    1     =>  40,
+                    2     =>  20,
+                    3     =>  20,
+                    4     =>  20,
+                    5     =>  20,
+                    6     =>  20,
+                    7     =>  20,
+                    8     =>  20,
+                    9     =>  20,
+                    10     =>  20,
+                    11     =>  20,
+                    12     =>  20,
+                    13     =>  20,
+                    14     =>  20,
+                    15     =>  20,
+                    16     =>  20,
+                    17     =>  20,
+                    18     =>  20,
+                    19     =>  20,
+                    20     =>  20,
+                    21     =>  20,
+                    22     =>  20,
+                    23     =>  20,
                 ));
 
+                $sheet->setWidth('A', 3);
+                $sheet->setWidth('B', 3);
+                $sheet->setWidth('C', 20);
+                $sheet->setWidth('D', 3);
+                $sheet->setWidth('E', 35);
+                /* end set size */
+                
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('DATA SASARAN KERJA PEGAWAI')
                     ->setFontSize(14)
                     ->setAlignment('center')
+                    ->setValignment('center')
                     ->setFontColor('#ffffff')
                     ->setBackground('#000000');
                 });
@@ -772,7 +870,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D7', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E7', function($cell) use($nilai){
@@ -788,7 +887,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D8', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E8', function($cell) use($nilai){
@@ -804,7 +904,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D9', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E9', function($cell) use($nilai){
@@ -824,7 +925,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D10', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E10', function($cell) use($nilai){
@@ -844,7 +946,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D11', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E11', function($cell) use($instansi){
@@ -853,7 +956,7 @@ class NilaiController extends Controller
 
                 /* yang menilai */
                 $sheet->cell('A12', function($cell) {
-                    $cell->setValue('1.')
+                    $cell->setValue('2.')
                     ->setBackground('#13f222');
                 });
 
@@ -871,7 +974,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D13', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E13', function($cell) use($nilai){
@@ -891,7 +995,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D14', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E14', function($cell) use($nilai){
@@ -911,7 +1016,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D15', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E15', function($cell) use($nilai){
@@ -931,7 +1037,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D16', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E16', function($cell) use($nilai){
@@ -951,7 +1058,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D17', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E17', function($cell) use($instansi){
@@ -961,7 +1069,7 @@ class NilaiController extends Controller
 
                 /* atasan pejabat penilai */
                 $sheet->cell('A18', function($cell) {
-                    $cell->setValue('1.')
+                    $cell->setValue('3.')
                     ->setBackground('#114ef7');
                 });
 
@@ -979,7 +1087,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D19', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E19', function($cell) use($nilai){
@@ -999,7 +1108,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D20', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E20', function($cell) use($nilai){
@@ -1019,7 +1129,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D21', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E21', function($cell) use($nilai){
@@ -1039,7 +1150,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D22', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E22', function($cell) use($nilai){
@@ -1059,7 +1171,8 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('D23', function($cell) {
-                    $cell->setValue(':');
+                    $cell->setValue(':')
+                        ->setAlignment('center');
                 });
 
                 $sheet->cell('E23', function($cell) use($instansi){
@@ -1071,24 +1184,145 @@ class NilaiController extends Controller
 
             $excel->sheet('form_skp',function($sheet) use($sasaran,$nilai,$instansi){
                 $sheet->mergeCells('A1:K1');
-                $sheet->mergeCells('B3:C3');
+                $sheet->mergeCells('B3:D3');
                 $sheet->mergeCells('F3:K3');
                 $sheet->mergeCells('A9:A10');
                 $sheet->mergeCells('B9:B10');
+                $sheet->mergeCells('C9:C10');
+                $sheet->mergeCells('D9:D10');
+
+                $sheet->mergeCells('B9:D9');
+                $sheet->mergeCells('B10:D10');
                 $sheet->mergeCells('E9:E10');
                 $sheet->mergeCells('F9:K9');
                 $sheet->mergeCells('F10:G10');
                 $sheet->mergeCells('I10:J10');
 
+                $sheet->mergeCells('C4:D4');
+                $sheet->mergeCells('C5:D5');
+                $sheet->mergeCells('C6:D6');
+                $sheet->mergeCells('C7:D7');
+                $sheet->mergeCells('C8:D8');
+                $sheet->mergeCells('G4:K4');
+                $sheet->mergeCells('G5:K5');
+                $sheet->mergeCells('G6:K6');
+                $sheet->mergeCells('G7:K7');
+                $sheet->mergeCells('G8:K8');
+
+                $sheet->setBorder('A3', 'thin');
+                $sheet->setBorder('B3:D3', 'thin');
+                $sheet->setBorder('E3', 'thin');
+                $sheet->setBorder('F3:K3', 'thin');
+
+                $sheet->setBorder('A4', 'thin');
+                $sheet->setBorder('B4', 'thin');
+                $sheet->setBorder('C4', 'thin');
+
+                $sheet->setBorder('E4', 'thin');
+                $sheet->setBorder('F4', 'thin');
+                $sheet->setBorder('G4', 'thin');
+                
+
+                $sheet->setBorder('E5', 'thin');
+                $sheet->setBorder('F5', 'thin');
+                $sheet->setBorder('G5', 'thin');
+
+                $sheet->setBorder('E6', 'thin');
+                $sheet->setBorder('F6', 'thin');
+                $sheet->setBorder('G6', 'thin');
+
+                $sheet->setBorder('E7', 'thin');
+                $sheet->setBorder('F7', 'thin');
+                $sheet->setBorder('G7', 'thin');
+
+                $sheet->setBorder('E8', 'thin');
+                $sheet->setBorder('F8', 'thin');
+                $sheet->setBorder('G8', 'thin');
+
+                $sheet->setBorder('A5', 'thin');
+                $sheet->setBorder('B5', 'thin');
+                $sheet->setBorder('C5', 'thin');
+
+                $sheet->setBorder('A6', 'thin');
+                $sheet->setBorder('B6', 'thin');
+                $sheet->setBorder('C6', 'thin');
+
+                $sheet->setBorder('A7', 'thin');
+                $sheet->setBorder('B7', 'thin');
+                $sheet->setBorder('C7', 'thin');
+
+                $sheet->setBorder('A8', 'thin');
+                $sheet->setBorder('B8', 'thin');
+                $sheet->setBorder('C8', 'thin');
+
+                $sheet->setBorder('A9', 'thin');
+                $sheet->setBorder('B9', 'thin');
+                $sheet->setBorder('C9', 'thin');
+                $sheet->setBorder('D9', 'thin');
+                $sheet->setBorder('E9', 'thin');
+                $sheet->setBorder('F9', 'thin');
+                $sheet->setBorder('F10', 'thin');
+                $sheet->setBorder('H10', 'thin'); 
+                $sheet->setBorder('I10', 'thin');
+                $sheet->setBorder('J10', 'thin');                
+                $sheet->setBorder('K10', 'thin');                
+                
+
+
+                /* set size */
+                $sheet->setHeight(array(
+                    1     =>  30,
+                    2     =>  20,
+                    3     =>  20,
+                    4     =>  20,
+                    5     =>  20,
+                    6     =>  20,
+                    7     =>  20,
+                    8     =>  20,
+                    9     =>  20,
+                    10     =>  20,
+                    11     =>  20,
+                    12     =>  20,
+                    13     =>  20,
+                    14     =>  20,
+                    15     =>  20,
+                    16     =>  20,
+                    17     =>  20,
+                    18     =>  20,
+                    19     =>  20,
+                    20     =>  20,
+                    21     =>  20,
+                    22     =>  20,
+                    23     =>  20,
+                    24     =>  20,
+                    25     =>  20,
+                ));
+
+                $sheet->setWidth('A', 5);
+                $sheet->setWidth('B', 35);
+                $sheet->setWidth('C', 47);
+                $sheet->setWidth('D', 5);
+                $sheet->setWidth('E', 5);
+                $sheet->setWidth('F', 25);
+                $sheet->setWidth('G', 30);
+                $sheet->setWidth('H', 15);
+
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('SASARAN KERJA PEGAWAI')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A3', function($cell) {
                     $cell->setValue('No.')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
                 $sheet->cell('A4', function($cell) {
@@ -1119,12 +1353,17 @@ class NilaiController extends Controller
 
                 $sheet->cell('B3', function($cell) {
                     $cell->setValue('I. PEJABAT PENILAI')
-                    ->setFontSize(12);
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
+
                 $sheet->cell('B4', function($cell) {
                     $cell->setValue('Nama')
                     ->setFontSize(12);
                 });
+
                 $sheet->cell('C4', function($cell) use($nilai){
                     if(count($nilai->penilai)>0){
                         $cell->setValue($nilai->penilai->nama_lengkap)
@@ -1184,13 +1423,19 @@ class NilaiController extends Controller
 
                 $sheet->cell('E3', function($cell) {
                     $cell->setValue('No.')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('F3', function($cell) {
                     $cell->setValue('II. PEGAWAI NEGERI SIPIL YANG DINILAI')
-                    ->setFontSize(12);
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
 
                 $sheet->cell('E4', function($cell) {
@@ -1271,40 +1516,67 @@ class NilaiController extends Controller
                 /*================ kegiatan =========*/
                 $sheet->cell('A9', function($cell){
                     $cell->setValue('No.')
-                    ->setFontSize(12);
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
                 $sheet->cell('B9', function($cell){
                     $cell->setValue('III. KEGIATAN TUGAS JABATAN')
-                    ->setFontSize(12);
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center');
                 });
                 $sheet->cell('E9', function($cell){
                     $cell->setValue('AK')
-                    ->setFontSize(12);
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ));
                 });
                 $sheet->cell('F9', function($cell){
                     $cell->setValue('TARGET')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('F10', function($cell){
                     $cell->setValue('KUANT/OUTPUT')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
                 $sheet->cell('H10', function($cell){
                     $cell->setValue('KUAL/MUTU')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
                 $sheet->cell('I10', function($cell){
                     $cell->setValue('WAKTU')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
                 $sheet->cell('K10', function($cell){
                     $cell->setValue('BIAYA')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
                 
@@ -1313,9 +1585,21 @@ class NilaiController extends Controller
                 $jumtugas=count($nilai->pegawai->tugas);
                 if(count($nilai->pegawai->tugas)>0){
                     foreach($nilai->pegawai->tugas as $row){
+                        $sheet->mergeCells('B'.$no.':D'.$no);
+                        $sheet->setBorder('A'.$no, 'thin');
+                        $sheet->setBorder('B'.$no, 'thin');
+                        $sheet->setBorder('E'.$no, 'thin');
+                        $sheet->setBorder('F'.$no, 'thin');
+                        $sheet->setBorder('G'.$no, 'thin');
+                        $sheet->setBorder('H'.$no, 'thin');
+                        $sheet->setBorder('I'.$no, 'thin');
+                        $sheet->setBorder('J'.$no, 'thin');
+                        $sheet->setBorder('K'.$no, 'thin');
+
                         $sheet->cell('A'.$no, function($cell) use($nos){
                             $cell->setValue($nos)
-                            ->setFontSize(12);
+                            ->setFontSize(12)
+                            ->setAlignment('center');
                         });
     
                         $sheet->cell('B'.$no, function($cell) use($row){
@@ -1329,20 +1613,35 @@ class NilaiController extends Controller
                         });
     
                         $sheet->cell('F'.$no, function($cell) use($row){
-                            $cell->setValue($row->target[0]->kuant." ".$row->target[0]->output)
+                            $cell->setValue($row->target[0]->kuant)
                             ->setFontSize(12)
                             ->setAlignment('center');
                         });
+
+                        $sheet->cell('G'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->output)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+
                         $sheet->cell('H'.$no, function($cell) use($row){
                             $cell->setValue($row->target[0]->kual)
                             ->setFontSize(12)
                             ->setAlignment('center');
                         });
+                        
                         $sheet->cell('I'.$no, function($cell) use($row){
-                            $cell->setValue($row->target[0]->waktu." ".$row->target[0]->periode_waktu)
+                            $cell->setValue($row->target[0]->waktu)
                             ->setFontSize(12)
                             ->setAlignment('center');
                         });
+
+                        $sheet->cell('J'.$no, function($cell) use($row){
+                            $cell->setValue($row->target[0]->periode_waktu)
+                            ->setFontSize(12)
+                            ->setAlignment('center');
+                        });
+
                         $sheet->cell('K'.$no, function($cell) use($row){
                             $cell->setValue($row->target[0]->biaya)
                             ->setFontSize(12)
@@ -1352,8 +1651,16 @@ class NilaiController extends Controller
                         $no++;
                         $nos++;
                     }
-    
-                    $sheet->mergeCells('A'.$no.':C'.$no);
+                    
+                    $sheet->setBorder('A'.$no, 'thin');
+                    $sheet->setBorder('E'.$no, 'thin');
+                    $sheet->setBorder('F'.$no, 'thin');
+
+                    $sheet->setHeight(array(
+                        $no     =>  40,
+                    ));
+
+                    $sheet->mergeCells('A'.$no.':D'.$no);
                     $sheet->cell('A'.$no, function($cell){
                         $cell->setValue('Jumlah')
                         ->setFontSize(12)
@@ -1443,9 +1750,108 @@ class NilaiController extends Controller
                 $sheet->mergeCells('K7:L7');
                 $sheet->mergeCells('N7:O7');
 
+                $sheet->setHeight(array(
+                    1     =>  30,
+                    2     =>  20,
+                    3     =>  20,
+                    4     =>  20,
+                    5     =>  20,
+                    6     =>  20,
+                    7     =>  20,
+                    8     =>  20,
+                    9     =>  20,
+                    10     =>  20,
+                    11     =>  20,
+                    12     =>  20,
+                    13     =>  20,
+                    14     =>  20,
+                    15     =>  20,
+                    16     =>  20,
+                    17     =>  20,
+                    18     =>  20,
+                    19     =>  20,
+                    20     =>  20,
+                    21     =>  20,
+                    22     =>  20,
+                    23     =>  20,
+                    24     =>  20,
+                    25     =>  20,
+                    26     =>  20,
+                    27     =>  20,
+                    28     =>  20,
+                    29     =>  20,
+                    30     =>  20,
+                    31     =>  20,
+                    32     =>  20,
+                    33     =>  20,
+                    34     =>  20,
+                    35     =>  20,
+                    36     =>  20,
+                    37     =>  20,
+                    38     =>  20,
+                    39     =>  20,
+                    40     =>  20,
+                ));
+
+                $sheet->setWidth('A', 5);
+                $sheet->setWidth('B', 85);
+                $sheet->setWidth('C', 5);
+                $sheet->setWidth('D', 10);
+                $sheet->setWidth('K', 15);
+                $sheet->setWidth('M', 10);
+                $sheet->setWidth('N', 10);
+                $sheet->setWidth('O', 10);
+                $sheet->setWidth('P', 10);
+                $sheet->setWidth('Q', 18);
+                $sheet->setWidth('R', 20);
+
+                $sheet->setBorder('A5', 'thin');    
+                $sheet->setBorder('B5', 'thin');    
+                $sheet->setBorder('C5', 'thin');    
+                $sheet->setBorder('D5', 'thin');    
+                $sheet->setBorder('J5', 'thin');    
+                $sheet->setBorder('K5', 'thin');    
+                $sheet->setBorder('Q5', 'thin');    
+                $sheet->setBorder('R5', 'thin');    
+
+                $sheet->setBorder('D6', 'thin');    
+                $sheet->setBorder('F6', 'thin');    
+                $sheet->setBorder('G6', 'thin');    
+                $sheet->setBorder('H6', 'thin');    
+                $sheet->setBorder('I6', 'thin');    
+
+                $sheet->setBorder('K6', 'thin');    
+                $sheet->setBorder('M6', 'thin');    
+                $sheet->setBorder('N6', 'thin');    
+                $sheet->setBorder('O6', 'thin');    
+                $sheet->setBorder('P6', 'thin');    
+
+                $sheet->setBorder('A7', 'thin');
+                $sheet->setBorder('B7', 'thin');    
+                $sheet->setBorder('C7', 'thin');
+                $sheet->setBorder('D7', 'thin');
+                $sheet->setBorder('E7', 'thin');
+                $sheet->setBorder('F7', 'thin');
+                $sheet->setBorder('G7', 'thin');
+                $sheet->setBorder('H7', 'thin');
+                $sheet->setBorder('I7', 'thin');
+                $sheet->setBorder('J7', 'thin');
+                $sheet->setBorder('K7', 'thin');
+                $sheet->setBorder('L7', 'thin');
+                $sheet->setBorder('M7', 'thin');
+                $sheet->setBorder('N7', 'thin');
+                $sheet->setBorder('O7', 'thin');
+                $sheet->setBorder('P7', 'thin');
+                $sheet->setBorder('Q7', 'thin');
+                $sheet->setBorder('R7', 'thin');
+
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('SASARAN KERJA PEGAWAI')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -1496,25 +1902,40 @@ class NilaiController extends Controller
                 /*==============HEADER TABEL ================*/
                 $sheet->cell('A5', function($cell) {
                     $cell->setValue('NO.')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('B5', function($cell) {
                     $cell->setValue('I. KEGIATAN TUGAS JABATAN')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('C5', function($cell) {
                     $cell->setValue('AK')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('D5', function($cell) {
                     $cell->setValue('TARGET')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -1525,7 +1946,7 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('F6', function($cell) {
-                    $cell->setValue('Kual/  Mutu')
+                    $cell->setValue('Kual/Mutu')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
@@ -1544,13 +1965,20 @@ class NilaiController extends Controller
 
                 $sheet->cell('J5', function($cell) {
                     $cell->setValue('AK')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('K5', function($cell) {
                     $cell->setValue('REALISASI')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -1561,7 +1989,7 @@ class NilaiController extends Controller
                 });
 
                 $sheet->cell('M6', function($cell) {
-                    $cell->setValue('Kual/  Mutu')
+                    $cell->setValue('Kual/Mutu')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
@@ -1582,98 +2010,162 @@ class NilaiController extends Controller
                 
                 $sheet->cell('Q5', function($cell) {
                     $cell->setValue('PENGHITUNGAN')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('R5', function($cell) {
                     $cell->setValue('NILAI CAPAIAN SKP')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A7', function($cell) {
                     $cell->setValue('1')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('B7', function($cell) {
                     $cell->setValue('2')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('C7', function($cell) {
                     $cell->setValue('3')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('D7', function($cell) {
                     $cell->setValue('4')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('F7', function($cell) {
                     $cell->setValue('5')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('G7', function($cell) {
                     $cell->setValue('6')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('I7', function($cell) {
                     $cell->setValue('7')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('J7', function($cell) {
                     $cell->setValue('8')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('K7', function($cell) {
                     $cell->setValue('9')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('M7', function($cell) {
                     $cell->setValue('10')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('N7', function($cell) {
                     $cell->setValue('11')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('P7', function($cell) {
                     $cell->setValue('12')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('Q7', function($cell) {
                     $cell->setValue('13')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
 
                 $sheet->cell('R7', function($cell) {
                     $cell->setValue('14')
-                    ->setFontSize(12)
-                    ->setAlignment('center');
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
+                    ->setAlignment('center')
+                    ->setBackground('#adabab');
                 });
                 /*==============END HEADER TABEL ============*/
 
@@ -1683,6 +2175,26 @@ class NilaiController extends Controller
                 $jumtugas=count($nilai->pegawai->tugas);
                 if(count($nilai->pegawai->tugas)>0){
                     foreach($nilai->pegawai->tugas as $row){
+                        $sheet->setBorder('A'.$no, 'thin');
+                        $sheet->setBorder('B'.$no, 'thin');    
+                        $sheet->setBorder('C'.$no, 'thin');
+                        $sheet->setBorder('D'.$no, 'thin');
+                        $sheet->setBorder('E'.$no, 'thin');
+                        $sheet->setBorder('F'.$no, 'thin');
+                        $sheet->setBorder('G'.$no, 'thin');
+                        $sheet->setBorder('H'.$no, 'thin');
+                        $sheet->setBorder('I'.$no, 'thin');
+                        $sheet->setBorder('J'.$no, 'thin');
+                        $sheet->setBorder('K'.$no, 'thin');
+                        $sheet->setBorder('L'.$no, 'thin');
+                        $sheet->setBorder('M'.$no, 'thin');
+                        $sheet->setBorder('N'.$no, 'thin');
+                        $sheet->setBorder('O'.$no, 'thin');
+                        $sheet->setBorder('P'.$no, 'thin');
+                        $sheet->setBorder('Q'.$no, 'thin');
+                        $sheet->setBorder('R'.$no, 'thin');
+
+
                         $sheet->cell('A'.$no, function($cell) use($nos){
                             $cell->setValue($nos)
                             ->setFontSize(12);
@@ -1804,6 +2316,13 @@ class NilaiController extends Controller
                     }
     
                     $sheet->mergeCells('A'.$no.':B'.$no);
+                    $sheet->setBorder('A'.$no, 'thin');
+                    $sheet->setBorder('C'.$no, 'thin');
+                    $sheet->setBorder('D'.$no, 'thin');
+                    $sheet->setBorder('J'.$no, 'thin');
+                    $sheet->setBorder('K'.$no, 'thin');
+                    $sheet->setBorder('R'.$no, 'thin');
+
                     $sheet->cell('A'.$no, function($cell){
                         $cell->setValue('Jumlah')
                         ->setFontSize(12)
@@ -1843,16 +2362,26 @@ class NilaiController extends Controller
                     });
     
                     $nok=$no+1;
+                    $sheet->setBorder('A'.$nok, 'thin');
+                    $sheet->setBorder('B'.$nok, 'thin');
                     $sheet->mergeCells('B'.$nok.':R'.$nok);
                     $sheet->cell('B'.$nok, function($cell){
                         $cell->setValue('II. TUGAS TAMBAHAN DAN KREATIVITAS :')
-                        ->setFontSize(12);
+                        ->setFont(array(
+                            'size'       => '12',
+                            'bold'       =>  true
+                        ));
                     });
     
                     $not=$nok+1;
                     $notam=1;
                     if(count($nilai->tambahan)>0){
                         foreach($nilai->tambahan as $p){
+                            $sheet->setBorder('A'.$not, 'thin');
+                            $sheet->setBorder('B'.$not, 'thin');
+                            $sheet->setBorder('C'.$not, 'thin');
+                            $sheet->setBorder('R'.$not, 'thin');
+
                             $sheet->cell('A'.$not, function($cell) use($notam){
                                 $cell->setValue($notam)
                                 ->setFontSize(12);
@@ -1874,6 +2403,11 @@ class NilaiController extends Controller
                             $not++;
                         }
                     }else{
+                        $sheet->setBorder('A'.$not, 'thin');
+                        $sheet->setBorder('B'.$not, 'thin');
+                        $sheet->setBorder('C'.$not, 'thin');
+                        $sheet->setBorder('R'.$not, 'thin');
+                        
                         $sheet->cell('A'.$not, function($cell) use($notam){
                             $cell->setValue($notam)
                             ->setFontSize(12);
@@ -1892,6 +2426,10 @@ class NilaiController extends Controller
                         });
     
                         $not=$not+1;
+                        $sheet->setBorder('A'.$not, 'thin');
+                        $sheet->setBorder('B'.$not, 'thin');
+                        $sheet->setBorder('C'.$not, 'thin');
+                        $sheet->setBorder('R'.$not, 'thin');
                         $sheet->cell('A'.$not, function($cell) use($notam){
                             $cell->setValue('')
                             ->setFontSize(12);
@@ -1910,6 +2448,10 @@ class NilaiController extends Controller
                         });
     
                         $not=$not+1;
+                        $sheet->setBorder('A'.$not, 'thin');
+                        $sheet->setBorder('B'.$not, 'thin');
+                        $sheet->setBorder('C'.$not, 'thin');
+                        $sheet->setBorder('R'.$not, 'thin');
                         $sheet->cell('A'.$not, function($cell) use($notam){
                             $cell->setValue('2')
                             ->setFontSize(12);
@@ -1928,6 +2470,10 @@ class NilaiController extends Controller
                         });
     
                         $not=$not+1;
+                        $sheet->setBorder('A'.$not, 'thin');
+                        $sheet->setBorder('B'.$not, 'thin');
+                        $sheet->setBorder('C'.$not, 'thin');
+                        $sheet->setBorder('R'.$not, 'thin');
                         $sheet->cell('A'.$not, function($cell) use($notam){
                             $cell->setValue('')
                             ->setFontSize(12);
@@ -1947,23 +2493,41 @@ class NilaiController extends Controller
                     }
     
                     $nok=$not+3;
+                    $no1=$not+1;
+                    $no2=$not+2;
+                    $sheet->mergeCells('A'.$no1.':R'.$no1);
+                    $sheet->setBorder('A'.$no1, 'thin');
+                    $sheet->mergeCells('A'.$no2.':R'.$no2);
+                    $sheet->setBorder('A'.$no2, 'thin');
                     $nom=$nok+1;
     
-                    
+                    $sheet->setBorder('A'.$nok, 'thin');
+                    $sheet->setBorder('R'.$nok, 'thin');
+
                     $sheet->mergeCells('A'.$nok.':Q'.$nok);
                     //$sheet->mergeCells('A'.$nok.':A'.$nom);
                     
                     $sheet->cell('A'.$nok, function($cell){
                         $cell->setValue('Nilai Capaian SKP')
-                        ->setFontSize(12)
+                        ->setFont(array(
+                            'size'       => '12',
+                            'bold'       =>  true
+                        ))
                         ->setAlignment('center');
                     });                    
     
                     $sheet->cell('R'.$nok, function($cell) use($nilai){
                         $cell->setValue($nilai->nilai_pencapaian)
-                        ->setFontSize(12);
+                        ->setFont(array(
+                            'size'       => '12',
+                            'bold'       =>  true
+                        ));
                     });
-    
+                    
+                    $sheet->mergeCells('A'.$nom.':Q'.$nom);
+                    $sheet->setBorder('A'.$nom, 'thin');
+                    $sheet->setBorder('R'.$nom, 'thin');
+
                     $sheet->cell('R'.$nom, function($cell) use($nilai){
                         $status="";
                         if($nilai->nilai_pencapaian<100 && $nilai->nilai_pencapaian>=90){
@@ -1979,7 +2543,10 @@ class NilaiController extends Controller
                         }
     
                         $cell->setValue($status)
-                        ->setFontSize(12)
+                        ->setFont(array(
+                            'size'       => '12',
+                            'bold'       =>  true
+                        ))
                         ->setAlignment('center');
                     });
     
@@ -2026,10 +2593,84 @@ class NilaiController extends Controller
 
             $excel->sheet('Perilaku Kerja',function($sheet) use($sasaran,$nilai,$instansi){
                 $sheet->mergeCells('A1:J1');
+                $sheet->mergeCells('A3:B3');
+                $sheet->mergeCells('A4:B4');
+                $sheet->mergeCells('A8:G8');
+
+                /* set size */
+                $sheet->setHeight(array(
+                    1     =>  30,
+                    2     =>  20,
+                    3     =>  20,
+                    4     =>  20,
+                    5     =>  20,
+                    6     =>  30,
+                    7     =>  20,
+                    8     =>  20,
+                    9     =>  20,
+                    10     =>  20,
+                    11     =>  20,
+                    12     =>  20,
+                    13     =>  20,
+                    14     =>  20,
+                    15     =>  20,
+                    16     =>  20,
+                    17     =>  20,
+                    18     =>  20,
+                    19     =>  20,
+                    20     =>  20,
+                    21     =>  20,
+                    22     =>  20,
+                    23     =>  20,
+                    24     =>  20,
+                    25     =>  20,
+                ));
+
+                $sheet->setSize(array(
+                    'A3' => array(
+                        'width'     => 5,
+                        'height'    => 20
+                    ),
+                    'B3' => array(
+                        'width'     => 30,
+                        'height'    => 20
+                    ),
+                    'C3' => array(
+                        'width'     => 23,
+                        'height'    => 20
+                    ),
+                    'J3' => array(
+                        'width'     => 35,
+                        'height'    => 20
+                    )
+                ));
+
+                $sheet->setWidth('F', 15);
+                $sheet->setWidth('G', 35);
+
+                $sheet->setBorder('A6', 'thin');
+                $sheet->setBorder('B6', 'thin');
+                $sheet->setBorder('C6', 'thin');
+                $sheet->setBorder('G6', 'thin');
+
+                $sheet->setBorder('A7', 'thin');
+                $sheet->setBorder('B7', 'thin');
+                $sheet->setBorder('C7', 'thin');
+                $sheet->setBorder('G7', 'thin');
+
+                $sheet->setBorder('A8', 'thin');
+                $sheet->setBorder('A9', 'thin');
+                $sheet->setBorder('B9', 'thin');
+                $sheet->setBorder('C9', 'thin');
+                $sheet->setBorder('G9', 'thin');
 
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('BUKU CATATAN PENILAIAN PERILAKU PNS')
-                    ->setFontSize(12)
+                    ->setValignment('center')
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -2065,25 +2706,29 @@ class NilaiController extends Controller
 
                 $sheet->cell('A6', function($cell) {
                     $cell->setValue('No.')
+                    ->setValignment('center')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('B6', function($cell) {
                     $cell->setValue('Tanggal')
+                    ->setValignment('center')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
 
-                $sheet->mergeCells('C6:I6');
+                $sheet->mergeCells('C6:F6');
                 $sheet->cell('C6', function($cell) {
                     $cell->setValue('Uraian')
+                    ->setValignment('center')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
 
-                $sheet->cell('J6', function($cell) {
+                $sheet->cell('G6', function($cell) {
                     $cell->setValue('Nama/NIP dan Paraf Pejabat Penilai')
+                    ->setValignment('center')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
@@ -2100,14 +2745,14 @@ class NilaiController extends Controller
                     ->setAlignment('center');
                 });
 
-                $sheet->mergeCells('C7:I7');
+                $sheet->mergeCells('C7:F7');
                 $sheet->cell('C7', function($cell) {
                     $cell->setValue('3')
                     ->setFontSize(12)
                     ->setAlignment('center');
                 });
 
-                $sheet->cell('J7', function($cell) {
+                $sheet->cell('G7', function($cell) {
                     $cell->setValue('4')
                     ->setFontSize(12)
                     ->setAlignment('center');
@@ -2116,6 +2761,11 @@ class NilaiController extends Controller
                 $sheet->cell('A9', function($cell) {
                     $cell->setValue('1')
                     ->setFontSize(12)
+                    ->setBorder(array(
+                        'top'   => array(
+                            'style' => 'solid'
+                        )
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -2125,19 +2775,21 @@ class NilaiController extends Controller
                     ->setAlignment('center');
                 });
 
-                $sheet->mergeCells('C9:I9');
+                $sheet->mergeCells('C9:F9');
                 $sheet->cell('C9', function($cell) use($sasaran){
                     $cell->setValue('Penilaian SKP sampai dengan akhir '.date('F Y',strtotime($sasaran->end_periode)).' =')
                     ->setFontSize(12);
                 });
 
-                $sheet->mergeCells('C10:I10');
+                $sheet->mergeCells('C10:F10');
+                $sheet->setBorder('A10:G10', 'thin');
                 $sheet->cell('C10', function($cell) use($nilai){
                     $cell->setValue($nilai->nilai_pencapaian." sedangkan penilaian perilaku kerjanya adalah")
                     ->setFontSize(12);
                 });
 
-                $sheet->mergeCells('C11:I11');
+                $sheet->mergeCells('C11:F11');
+                $sheet->setBorder('A11:G11', 'thin');
                 $sheet->cell('C11', function($cell){
                     $cell->setValue('sebagai berikut :')
                     ->setFontSize(12);
@@ -2148,6 +2800,7 @@ class NilaiController extends Controller
 
                 if(count($nilai->prestasi)>0){
                     foreach($nilai->prestasi as $pr){
+                        $sheet->setBorder('A'.$no.':G'.$no, 'thin');
                         $sheet->cell('C'.$no, function($cell) use($pr){
                             $cell->setValue($pr->nama_perilaku)
                             ->setFontSize(12);
@@ -2184,7 +2837,8 @@ class NilaiController extends Controller
                         $total+=$pr->pivot->nilai;
                         $no++;
                     }
-    
+                    
+                    $sheet->setBorder('A'.$no.':G'.$no, 'thin');
                     $sheet->cell('C'.$no, function($cell){
                         $cell->setValue('Jumlah')
                         ->setFontSize(12);
@@ -2201,6 +2855,7 @@ class NilaiController extends Controller
                     });
     
                     $nos=$no+1;
+                    $sheet->setBorder('A'.$nos.':G'.$nos, 'thin');
                     $ratarata=$total/count($nilai->prestasi);
     
                     $sheet->cell('C'.$nos, function($cell){
@@ -2235,20 +2890,35 @@ class NilaiController extends Controller
                         $cell->setValue("( ".$status." )")
                         ->setFontSize(12);
                     });
-    
-                    $sheet->cell('J12', function($cell) use($nilai){
+
+                    $nol=$nos+1;
+                    $sheet->setBorder('A'.$nol.':G'.$nol, 'thin');
+                    $sheet->cell('G'.$nol, function($cell) use($nilai){
                         $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan)
                         ->setFontSize(12)
                         ->setAlignment('center');
                     });
-    
-                    $sheet->cell('J16', function($cell) use($nilai){
+
+                    $no1=$nol+1;
+                    $sheet->setBorder('A'.$no1.':G'.$no1, 'thin');
+
+                    $no2=$no1+1;
+                    $sheet->setBorder('A'.$no2.':G'.$no2, 'thin');
+
+                    $no3=$no2+1;
+                    $sheet->setBorder('A'.$no3.':G'.$no3, 'thin');
+                    
+                    $no4=$nol+4;
+                    $sheet->setBorder('A'.$no4.':G'.$no4, 'thin');
+                    $sheet->cell('G'.$no4, function($cell) use($nilai){
                         $cell->setValue($nilai->penilai->nama_lengkap)
                         ->setFontSize(12)
                         ->setAlignment('center');
                     });
-    
-                    $sheet->cell('J17', function($cell) use($nilai){
+                    
+                    $no5=$no4+1;
+                    $sheet->setBorder('A'.$no5.':G'.$no5, 'thin');
+                    $sheet->cell('G'.$no5, function($cell) use($nilai){
                         $cell->setValue($nilai->penilai->nip)
                         ->setFontSize(12)
                         ->setAlignment('center');
@@ -2261,10 +2931,129 @@ class NilaiController extends Controller
                 $sheet->mergeCells('A1:E1');
                 $sheet->mergeCells('B6:E6');
                 $sheet->mergeCells('B6:E6');
-                $sheet->mergeCells('B12:E12');
-                $sheet->mergeCells('B18:E18');
+                $sheet->mergeCells('B12:J12');
+                $sheet->mergeCells('B18:J18');
+                $sheet->mergeCells('B24:J24');
                 $sheet->mergeCells('A6:J6');
                 $sheet->mergeCells('A7:J7');
+                $sheet->mergeCells('E13:J13');
+                $sheet->mergeCells('E14:J14');
+                $sheet->mergeCells('E15:J15');
+                $sheet->mergeCells('E16:J16');
+                $sheet->mergeCells('E17:J17');
+                $sheet->mergeCells('E19:J19');
+                $sheet->mergeCells('E20:J20');
+                $sheet->mergeCells('E21:J21');
+                $sheet->mergeCells('E22:J22');
+                $sheet->mergeCells('E23:J23');
+                $sheet->mergeCells('E25:J25');
+                $sheet->mergeCells('E26:J26');
+                $sheet->mergeCells('E27:J27');
+                $sheet->mergeCells('E28:J28');
+                $sheet->mergeCells('E29:J29');
+
+                $sheet->setHeight(array(
+                    1     =>  30,
+                    2     =>  20,
+                    3     =>  20,
+                    4     =>  20,
+                    5     =>  20,
+                    6     =>  20,
+                    7     =>  20,
+                    8     =>  20,
+                    9     =>  20,
+                    10     =>  20,
+                    11     =>  20,
+                    12     =>  20,
+                    13     =>  20,
+                    14     =>  20,
+                    15     =>  20,
+                    16     =>  20,
+                    17     =>  20,
+                    18     =>  20,
+                    19     =>  20,
+                    20     =>  20,
+                    21     =>  20,
+                    22     =>  20,
+                    23     =>  20,
+                    24     =>  20,
+                    25     =>  20,
+                    26     =>  20,
+                    27     =>  20,
+                    28     =>  20,
+                    29     =>  20,
+                    30     =>  20,
+                    31     =>  20,
+                    32     =>  20,
+                    33     =>  20,
+                    34     =>  20,
+                    35     =>  20,
+                    36     =>  20,
+                    37     =>  20,
+                    38     =>  20,
+                    39     =>  20,
+                    40     =>  20,
+                    41     =>  20,
+                    42     =>  20,
+                    43     =>  20,
+                    44     =>  20,
+                    45     =>  20,
+                    46     =>  20,
+                    47     =>  20,
+                    48     =>  20,
+                    49     =>  20,
+                    50     =>  20,
+                    51     =>  30,
+                    52     =>  20,
+                    53     =>  20,
+                    54     =>  20,
+                    55     =>  20,
+                    56     =>  20,
+                    57     =>  20,
+                    58     =>  20,
+                    59     =>  20,
+                    60     =>  20,
+                    61     =>  20,
+                    62     =>  20,
+                    63     =>  20,
+                    64     =>  20,
+                    65     =>  20,
+                    66     =>  20,
+                    67     =>  20,
+                    68     =>  20,
+                    69     =>  20,
+                    70     =>  20,
+                    71     =>  20,
+                    72     =>  20,
+                    73     =>  20,
+                    74     =>  20,
+                    75     =>  20,
+                    76     =>  20,
+                    77     =>  20,
+                    78     =>  20,
+                    79     =>  20,
+                    80     =>  20,
+                    81     =>  20,
+                    82     =>  20,
+                    83     =>  20,
+                    84     =>  20,
+                    85     =>  20,
+                    86     =>  20,
+                    87     =>  20,
+                    88     =>  20,
+                    89     =>  20,
+                    90     =>  20,
+                    91     =>  20,
+                    92     =>  20,
+                    93     =>  20,
+                    94     =>  20,
+                    95     =>  20,
+                    96     =>  20,
+                    97     =>  20,
+                    98     =>  20,
+                    99     =>  20,
+                    100     =>  20,
+                ));
 
                 $sheet->setSize(array(
                     'A1' => array(
@@ -2278,18 +3067,43 @@ class NilaiController extends Controller
                     'D4' => array(
                         'width'     => 5,
                         'height'    => 25
+                    ),
+                    'B12' => array(
+                        'width'     => 55,
+                        'height'    => 25
                     )
                 ));
 
+                $sheet->setWidth('A', 3);
+                $sheet->setWidth('B', 3);
+                $sheet->setWidth('C', 30);
+                $sheet->setWidth('D', 3);
+                $sheet->setWidth('E', 35);
+                $sheet->setWidth('F', 1);
+                $sheet->setWidth('G', 3);
+                $sheet->setWidth('H', 10);
+                $sheet->setWidth('I', 10);
+
+                $objDrawing = new \PHPExcel_Worksheet_Drawing;
+                $objDrawing->setPath(public_path('img/logo.png')); //your image path
+                $objDrawing->setCoordinates('E2');
+                $objDrawing->setWorksheet($sheet);
+
                 $sheet->cell('A6', function($cell) use($instansi){
                     $cell->setValue('PENILAIAN PRESTASI KERJA')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
                 $sheet->cell('A7', function($cell) use($instansi){
                     $cell->setValue('PEGAWAI NEGERI SIPIL')
-                    ->setFontSize(12)
+                    ->setFont(array(
+                        'size'       => '12',
+                        'bold'       =>  true
+                    ))
                     ->setAlignment('center');
                 });
 
@@ -2308,328 +3122,403 @@ class NilaiController extends Controller
                     ->setFontSize(12);
                 });
 
+                $sheet->setBorder('B12', 'thin');
                 $sheet->cell('B12', function($cell) {
                     $cell->setValue('YANG DINILAI');
                 });
 
-                $sheet->cell('A13', function($cell) {
+                $sheet->setBorder('A12', 'thin');
+                $sheet->cell('A12', function($cell) {
                     $cell->setValue('1.');
                 });
 
+                $sheet->setBorder('B13', 'thin');
                 $sheet->cell('B13', function($cell) {
                     $cell->setValue('a.');
                 });
 
+                $sheet->setBorder('C13', 'thin');
                 $sheet->cell('C13', function($cell) {
                     $cell->setValue('Nama');
                 });
 
+                $sheet->setBorder('D13', 'thin');
                 $sheet->cell('D13', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E13', 'thin');
                 $sheet->cell('E13', function($cell) use($nilai){
                     if(count($nilai->pegawai)>0){
                         $cell->setValue($nilai->pegawai->nama_lengkap);
                     }   
                 });
 
+                $sheet->setBorder('B14', 'thin');
                 $sheet->cell('B14', function($cell) {
                     $cell->setValue('b.');
                 });
 
+                $sheet->setBorder('C14', 'thin');
                 $sheet->cell('C14', function($cell) {
                     $cell->setValue('NIP');
                 });
 
+                $sheet->setBorder('D14', 'thin');
                 $sheet->cell('D14', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E14', 'thin');
                 $sheet->cell('E14', function($cell) use($nilai){
                     if(count($nilai->pegawai)>0){
                         $cell->setValue($nilai->pegawai->nip);
                     }
                 });
 
+                $sheet->setBorder('B15', 'thin');
                 $sheet->cell('B15', function($cell) {
                     $cell->setValue('c.');
                 });
 
+                $sheet->setBorder('C15', 'thin');
                 $sheet->cell('C15', function($cell) {
                     $cell->setValue('Pangkat / Gol. Ruang');
                 });
 
+                $sheet->setBorder('D15', 'thin');
                 $sheet->cell('D15', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E15', 'thin');
                 $sheet->cell('E15', function($cell) use($nilai){
                     if(count($nilai->pegawai->pangkat)>0){
                         $cell->setValue($nilai->pegawai->pangkat[0]->nama_pangkat);
                     }
                 });
 
+                $sheet->setBorder('B16', 'thin');
                 $sheet->cell('B16', function($cell) {
                     $cell->setValue('d.');
                 });
 
+                $sheet->setBorder('C16', 'thin');
                 $sheet->cell('C16', function($cell) {
                     $cell->setValue('Jabatan');
                 });
 
+                $sheet->setBorder('D16', 'thin');
                 $sheet->cell('D16', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E16', 'thin');
                 $sheet->cell('E16', function($cell) use($nilai){
                     if(count($nilai->pegawai->jabatan)>0){
                         $cell->setValue($nilai->pegawai->jabatan[0]->nama_jabatan);
                     }   
                 });
 
+                $sheet->setBorder('B17', 'thin');
                 $sheet->cell('B17', function($cell) {
                     $cell->setValue('e.');
                 });
 
+                $sheet->setBorder('C17', 'thin');
                 $sheet->cell('C17', function($cell) {
                     $cell->setValue('Unit Kerja');
                 });
 
+                $sheet->setBorder('D17', 'thin');
                 $sheet->cell('D17', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E17', 'thin');
                 $sheet->cell('E17', function($cell) use($instansi){
                     $cell->setValue($instansi->nama_instansi);
                 });
 
                 /* yang menilai */
+                $sheet->setBorder('A18', 'thin');
                 $sheet->cell('A18', function($cell) {
                     $cell->setValue('2.');
                 });
 
+                $sheet->setBorder('B18', 'thin');
                 $sheet->cell('B18', function($cell) {
                     $cell->setValue('PEJABAT PENILAI');
                 });
 
+                $sheet->setBorder('B19', 'thin');
                 $sheet->cell('B19', function($cell) {
                     $cell->setValue('a.');
                 });
 
+                $sheet->setBorder('C19', 'thin');
                 $sheet->cell('C19', function($cell) {
                     $cell->setValue('Nama');
                 });
 
+                $sheet->setBorder('D19', 'thin');
                 $sheet->cell('D19', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E19', 'thin');
                 $sheet->cell('E19', function($cell) use($nilai){
                     if(count($nilai->penilai)>0){
                         $cell->setValue($nilai->penilai->nama_lengkap);
                     }
                 });
 
+                $sheet->setBorder('B20', 'thin');
                 $sheet->cell('B20', function($cell) {
                     $cell->setValue('b.');
                 });
 
+                $sheet->setBorder('C20', 'thin');
                 $sheet->cell('C20', function($cell) {
                     $cell->setValue('NIP');
                 });
 
+                $sheet->setBorder('D20', 'thin');
                 $sheet->cell('D20', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E20', 'thin');
                 $sheet->cell('E20', function($cell) use($nilai){
                     if(count($nilai->penilai)>0){
                         $cell->setValue($nilai->penilai->nip);
                     }
                 });
 
+                $sheet->setBorder('B21', 'thin');
                 $sheet->cell('B21', function($cell) {
                     $cell->setValue('c.');
                 });
 
+                $sheet->setBorder('C21', 'thin');
                 $sheet->cell('C21', function($cell) {
                     $cell->setValue('Pangkat / Gol. Ruang');
                 });
 
+                $sheet->setBorder('D21', 'thin');
                 $sheet->cell('D21', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E21', 'thin');
                 $sheet->cell('E21', function($cell) use($nilai){
                     if(count($nilai->penilai->pangkat)>0){
                         $cell->setValue($nilai->penilai->pangkat[0]->nama_pangkat);
                     }
                 });
 
+                $sheet->setBorder('B22', 'thin');
                 $sheet->cell('B22', function($cell) {
                     $cell->setValue('d.');
                 });
 
+                $sheet->setBorder('C22', 'thin');
                 $sheet->cell('C22', function($cell) {
                     $cell->setValue('Jabatan');
                 });
 
+                $sheet->setBorder('D22', 'thin');
                 $sheet->cell('D22', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E22', 'thin');
                 $sheet->cell('E22', function($cell) use($nilai){
                     if(count($nilai->penilai->jabatan)>0){
                         $cell->setValue($nilai->penilai->jabatan[0]->nama_jabatan);
                     }
                 });
 
+                $sheet->setBorder('B23', 'thin');
                 $sheet->cell('B23', function($cell) {
                     $cell->setValue('e.');
                 });
 
+                $sheet->setBorder('C23', 'thin');
                 $sheet->cell('C23', function($cell) {
                     $cell->setValue('Unit Kerja');
                 });
 
+                $sheet->setBorder('D23', 'thin');
                 $sheet->cell('D23', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E23', 'thin');
                 $sheet->cell('E23', function($cell) use($instansi){
                     $cell->setValue($instansi->nama_instansi);
                 });
                 /* end yang menilai */
 
                 /* atasan pejabat penilai */
+                $sheet->setBorder('A24', 'thin');
                 $sheet->cell('A24', function($cell) {
                     $cell->setValue('3.');
                 });
 
+                $sheet->setBorder('B24', 'thin');
                 $sheet->cell('B24', function($cell) {
                     $cell->setValue('ATASAN PEJABAT PENILAI');
                 });
 
+                $sheet->setBorder('B25', 'thin');
                 $sheet->cell('B25', function($cell) {
                     $cell->setValue('a.');
                 });
 
+                $sheet->setBorder('C25', 'thin');
                 $sheet->cell('C25', function($cell) {
                     $cell->setValue('Nama');
                 });
 
+                $sheet->setBorder('D25', 'thin');
                 $sheet->cell('D25', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E25', 'thin');
                 $sheet->cell('E25', function($cell) use($nilai){
                     if(count($nilai->atasan)>0){
                         $cell->setValue($nilai->atasan->nama_lengkap);
                     }
                 });
 
+                $sheet->setBorder('B26', 'thin');
                 $sheet->cell('B26', function($cell) {
                     $cell->setValue('b.');
                 });
 
+                $sheet->setBorder('C26', 'thin');
                 $sheet->cell('C26', function($cell) {
                     $cell->setValue('NIP');
                 });
 
+                $sheet->setBorder('D26', 'thin');
                 $sheet->cell('D26', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E26', 'thin');
                 $sheet->cell('E26', function($cell) use($nilai){
                     if(count($nilai->atasan)>0){
                         $cell->setValue($nilai->atasan->nip);
                     }
                 });
 
+                $sheet->setBorder('B27', 'thin');
                 $sheet->cell('B27', function($cell) {
                     $cell->setValue('c.');
                 });
 
+                $sheet->setBorder('C27', 'thin');
                 $sheet->cell('C27', function($cell) {
                     $cell->setValue('Pangkat / Gol. Ruang');
                 });
 
+                $sheet->setBorder('D27', 'thin');
                 $sheet->cell('D27', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E27', 'thin');
                 $sheet->cell('E27', function($cell) use($nilai){
                     if(count($nilai->atasan->pangkat)>0){
                         $cell->setValue($nilai->atasan->pangkat[0]->nama_pangkat);
                     }
                 });
 
+                $sheet->setBorder('B28', 'thin');
                 $sheet->cell('B28', function($cell) {
                     $cell->setValue('d.');
                 });
 
+                $sheet->setBorder('C28', 'thin');
                 $sheet->cell('C28', function($cell) {
                     $cell->setValue('Jabatan');
                 });
 
+                $sheet->setBorder('D28', 'thin');
                 $sheet->cell('D28', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E28', 'thin');
                 $sheet->cell('E28', function($cell) use($nilai){
                     if(count($nilai->atasan->jabatan)>0){
                         $cell->setValue($nilai->atasan->jabatan[0]->nama_jabatan);
                     }
                 });
 
+                $sheet->setBorder('B29', 'thin');
                 $sheet->cell('B29', function($cell) {
                     $cell->setValue('e.');
                 });
 
+                $sheet->setBorder('C29', 'thin');
                 $sheet->cell('C29', function($cell) {
                     $cell->setValue('Unit Kerja');
                 });
 
+                $sheet->setBorder('D29', 'thin');
                 $sheet->cell('D29', function($cell) {
                     $cell->setValue(':');
                 });
 
+                $sheet->setBorder('E29', 'thin');
                 $sheet->cell('E29', function($cell) use($instansi){
                     $cell->setValue($instansi->nama_instansi);
                 });
                 /* end atasan pejabat penilai */
 
+                $sheet->setBorder('A30', 'thin');
                 $sheet->cell('A30', function($cell) {
                     $cell->setValue('4.');
                 });
 
-                $sheet->mergeCells('B30:I30');
+                $sheet->mergeCells('B30:J30');
+                $sheet->setBorder('B30', 'thin');
                 $sheet->cell('B30', function($cell) {
                     $cell->setValue('UNSUR YANG DINILAI');
                 });
 
+                $sheet->setBorder('J30', 'thin');
                 $sheet->cell('J30', function($cell) {
                     $cell->setValue('JUMLAH');
                 });
 
+                $sheet->setBorder('B31', 'thin');
                 $sheet->cell('B31', function($cell) {
                     $cell->setValue('a.');
                 });
 
                 $sheet->mergeCells('C31:G31');
+                $sheet->setBorder('C31', 'thin');
                 $sheet->cell('C31', function($cell) {
                     $cell->setValue('Sasaran Kerja Pegawai (SKP)');
                 });
 
+                $sheet->setBorder('H31', 'thin');
                 $sheet->cell('H31', function($cell) use($nilai){
                     $cell->setValue($nilai->nilai_pencapaian);
                 });
 
+                $sheet->setBorder('C31:J31', 'thin');
+                $sheet->setBorder('I31', 'thin');
                 $sheet->cell('I31', function($cell) {
                     $cell->setValue('X 60');
                 });
 
+                $sheet->setBorder('J31', 'thin');
                 $sheet->cell('J31', function($cell) use($nilai){
                     $total=$nilai->nilai_pencapaian*60/100;
                     $cell->setValue($total);
@@ -2640,6 +3529,7 @@ class NilaiController extends Controller
                 $rowkebawah=32+((count($nilai->prestasi))+2);
 
                 $sheet->mergeCells('B'.$rowsekarang.':B'.$rowkebawah);
+                $sheet->setBorder('B'.$rowsekarang.':B'.$rowkebawah, 'thin');
                 $sheet->cell('B'.$rowsekarang, function($cell) {
                     $cell->setValue('b.')
                     ->setAlignment('center');
@@ -2650,6 +3540,9 @@ class NilaiController extends Controller
                 $totalperilaku=0;
                 if(count($nilai->prestasi)>0){
                     foreach($nilai->prestasi as $pr){
+                        $sheet->setBorder('C'.$rowsekarang.':J'.$rowsekarang, 'thin');
+                        $sheet->mergeCells('D'.$rowsekarang.':G'.$rowsekarang);
+
                         $sheet->cell('C'.$rowsekarang, function($cell) use($nn){
                             $cell->setValue($nn)
                             ->setFontSize(12);
@@ -2688,7 +3581,9 @@ class NilaiController extends Controller
                         $rowsekarang++;
                         $nn++;
                     }
-    
+                    
+                    $sheet->setBorder('C'.$rowsekarang.':J'.$rowsekarang, 'thin');
+                    $sheet->mergeCells('C'.$rowsekarang.':G'.$rowsekarang);
                     $sheet->mergeCells('C'.$rowsekarang.':G'.$rowsekarang);
                     $sheet->cell('C'.$rowsekarang, function($cell){
                         $cell->setValue('Jumlah')
@@ -2701,6 +3596,8 @@ class NilaiController extends Controller
                     });
     
                     $rowratarata=$rowsekarang+1;
+                    $sheet->setBorder('C'.$rowratarata.':J'.$rowratarata, 'thin');
+                    $sheet->mergeCells('C'.$rowratarata.':G'.$rowratarata);
                     $sheet->cell('C'.$rowratarata, function($cell){
                         $cell->setValue('Nilai Rata - Rata')
                         ->setFontSize(12);
@@ -2733,6 +3630,8 @@ class NilaiController extends Controller
                     });
     
                     $rowperilaku=$rowratarata+1;
+                    $sheet->setBorder('C'.$rowperilaku.':J'.$rowperilaku, 'thin');
+                    $sheet->mergeCells('C'.$rowperilaku.':G'.$rowperilaku);
                     $sheet->cell('C'.$rowperilaku, function($cell){
                         $cell->setValue('Nilai Perilaku Kerja')
                         ->setFontSize(12);
@@ -2757,6 +3656,7 @@ class NilaiController extends Controller
                     });
     
                     $rowprestasi=$rowperilaku+1;
+                    $sheet->setBorder('A'.$rowprestasi.':J'.$rowprestasi, 'thin');
                     $sheet->mergeCells('A'.$rowprestasi.':I'.$rowprestasi);
     
                     $sheet->cell('A'.$rowprestasi, function($cell){
@@ -2774,6 +3674,8 @@ class NilaiController extends Controller
                     });
     
                     $rowpr=$rowprestasi+1;
+                    $sheet->setBorder('A'.$rowpr.':J'.$rowpr, 'thin');
+                    $sheet->mergeCells('A'.$rowpr.':I'.$rowpr);
                     $sheet->cell('J'.$rowpr, function($cell) use($nilai,$totalperilaku){
                         $ratarata=$totalperilaku/count($nilai->prestasi)*(40/100);
                         $total=$nilai->nilai_pencapaian*60/100;
@@ -2969,6 +3871,6 @@ class NilaiController extends Controller
                     });
                 }
             });
-        })->export('xlsx');
+        })->setActiveSheetIndex(0)->export('xlsx');
     }
 }

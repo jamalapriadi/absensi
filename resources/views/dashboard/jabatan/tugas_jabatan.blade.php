@@ -174,7 +174,7 @@
                                     '</div>'+
                                     '<div class="form-group">'+
                                         '<label class="control-label">Biaya</label>'+
-                                        '<input class="form-control" name="biaya" placeholder="Biaya">'+
+                                        '<input type="number" class="form-control" name="biaya" placeholder="Biaya" required>'+
                                     '</div>'+
                                 '</div>'+
 
@@ -216,6 +216,7 @@
                                 $('#pesanTarget').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
                                 showTugas();
                                 cekTarget();
+                                $("#modalHistory").modal("hide");
                             }else{
                                 $('#pesanTarget').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
                             }
@@ -293,7 +294,7 @@
                                 '</div>'+
                                 '<div class="form-group">'+
                                     '<label class="control-label">Biaya</label>'+
-                                    '<input class="form-control" name="biaya" placeholder="Biaya" value="'+result.biaya+'">'+
+                                    '<input type="number" class="form-control" name="biaya" placeholder="Biaya" value="'+result.biaya+'" required>'+
                                 '</div>'+
                             '</div>'+
 
@@ -339,6 +340,7 @@
                                 $('#pesanTarget').empty().html('<div class="alert alert-info">'+data.pesan+'</div>');
                                 showTugas();
                                 cekTarget();
+                                $("#modalHistory").modal("hide");
                             }else{
                                 $('#pesanTarget').empty().html('<div class="alert alert-danger"><h5>'+data.pesan+'</h5></div><pre>'+data.error+'</pre>');
                             }
