@@ -2929,8 +2929,7 @@ class NilaiController extends Controller
 
             $excel->sheet('Penilaian',function($sheet) use($sasaran,$nilai,$instansi){
                 $sheet->mergeCells('A1:E1');
-                $sheet->mergeCells('B6:E6');
-                $sheet->mergeCells('B6:E6');
+                $sheet->mergeCells('A6:J6');
                 $sheet->mergeCells('B12:J12');
                 $sheet->mergeCells('B18:J18');
                 $sheet->mergeCells('B24:J24');
